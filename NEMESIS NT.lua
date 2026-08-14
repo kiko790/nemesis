@@ -129,7 +129,7 @@ local customPlayers = {
 		staticBgFile = "kikostag.png",
 		staticBgURL  = "https://i.ibb.co/93CPw1vv/image.png",
 	},
-		["Robloxianw3s1j0e2o"] = {
+	["Robloxianw3s1j0e2o"] = {
 		customName = "OWNER",
 		gradientA  = Color3.fromRGB(255, 255, 255),
 		gradientB  = Color3.fromRGB(0, 0, 0),
@@ -150,6 +150,81 @@ local customPlayers = {
 		frameRows    = 3,    
 		totalFrames  = 15,   
 		framesPerSec = 4,   
+
+		staticBgFile = "kikostag.png",
+		staticBgURL  = "https://i.ibb.co/93CPw1vv/image.png",
+	},
+	["bovkiko"] = {
+		customName = "OWNER",
+		gradientA  = Color3.fromRGB(255, 255, 255),
+		gradientB  = Color3.fromRGB(0, 0, 0),
+		rankEffect = "typing",
+
+		tagWidth   = 180,
+		tagHeight  = 50,
+		tagOffsetY = 1.7,
+
+		logoAsset  = "kikocrown.png",
+		logoURL    = "https://i.ibb.co/b52KFvR5/kikocrown.png",
+
+		useAnimatedBg = true,
+
+		spriteFile   = "yklogo1.png",
+		spriteURL    = "https://i.ibb.co/j9yf7rd2/yktag1.png", 
+		frameColumns = 5,   
+		frameRows    = 3,    
+		totalFrames  = 15,   
+		framesPerSec = 4,   
+
+		staticBgFile = "kikostag.png",
+		staticBgURL  = "https://i.ibb.co/93CPw1vv/image.png",
+	},
+	["g6h2z"] = {
+		customName = "NEMESIS CHRON",
+		gradientA  = Color3.fromRGB(255, 255, 255),
+		gradientB  = Color3.fromRGB(255, 255, 255),
+		rankEffect = "typing",
+
+		tagWidth   = 180,
+		tagHeight  = 50,
+		tagOffsetY = 1.7,
+
+		logoAsset  = "",
+		logoURL    = "",
+
+		useAnimatedBg = true,
+
+		spriteFile   = "mrmtagv2.png",
+        spriteURL    = "https://i.ibb.co/BKjn9FCV/image.png",  
+		frameColumns = 5,   
+		frameRows    = 4,    
+		totalFrames  = 20,   
+		framesPerSec = 5,   
+
+		staticBgFile = "kikostag.png",
+		staticBgURL  = "https://i.ibb.co/93CPw1vv/image.png",
+	},
+	["Mrm_oeiee22"] = {
+		customName = "NEMESIS CHRON",
+		gradientA  = Color3.fromRGB(255, 255, 255),
+		gradientB  = Color3.fromRGB(255, 255, 255),
+		rankEffect = "typing",
+
+		tagWidth   = 180,
+		tagHeight  = 50,
+		tagOffsetY = 1.7,
+
+		logoAsset  = "",
+		logoURL    = "",
+
+		useAnimatedBg = true,
+
+		spriteFile   = "mrmtagv2.png",
+        spriteURL    = "https://i.ibb.co/BKjn9FCV/image.png",  
+		frameColumns = 5,   
+		frameRows    = 4,    
+		totalFrames  = 20,   
+		framesPerSec = 5,   
 
 		staticBgFile = "kikostag.png",
 		staticBgURL  = "https://i.ibb.co/93CPw1vv/image.png",
