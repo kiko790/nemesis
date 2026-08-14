@@ -74,7 +74,7 @@ local DEFAULT_TAG_HEIGHT   = 50
 local DEFAULT_TAG_OFFSET_Y = 1.7  
 local TAG_CORNER           = UDim.new(0, 14) 
 
-local LOGO_FILE = "nemsis_logo_external-removebg-preview.png"
+local LOGO_FILE = "nemesis-no-bg.png"
 local LOGO_URL  = "https://i.ibb.co/8DPYtKvx/nemesis-no-bg.png"
 local OWNER_LOGO_FILE = "blue_crown_test_logo.png"
 local OWNER_LOGO_URL  = "https://cdn.discordapp.com/attachments/1491906371812069610/1533943555746304251/blue_crown_test_logo.png?ex=6a7253c2&is=6a710242&hm=0d4d30f3ac9b5d964ec393cde74f86c09a710a0820d3b86c6d16158900033e3e&"
