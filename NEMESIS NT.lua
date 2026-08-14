@@ -79,7 +79,32 @@ local OWNER_LOGO_URL  = "https://cdn.discordapp.com/attachments/1491906371812069
 
 local customPlayers = {
 	["kryliczx"] = {
-		customName = "ITS YK",
+		customName = "FOUNDER",
+		gradientA  = Color3.fromRGB(173, 216, 230),
+		gradientB  = Color3.fromRGB(173, 216, 230),
+		rankEffect = "typing",
+
+		tagWidth   = 180,
+		tagHeight  = 50,
+		tagOffsetY = 1.7,
+
+		logoAsset  = "yktagpfp.png",
+		logoURL    = "https://i.ibb.co/XrSSgjmW/Nanami-Kento-Fight-Scene-PNG-Transparent-jpg-removebg-preview.png",
+
+		useAnimatedBg = true,
+
+		spriteFile   = "yktag.png",
+        spriteURL    = "https://i.ibb.co/Y7ddWVyk/image.png",  
+		frameColumns = 5,   
+		frameRows    = 4,    
+		totalFrames  = 20,   
+		framesPerSec = 5,   
+
+		staticBgFile = "kikostag.png",
+		staticBgURL  = "https://i.ibb.co/93CPw1vv/image.png",
+	},
+		["1vc_z"] = {
+		customName = "FOUNDER",
 		gradientA  = Color3.fromRGB(173, 216, 230),
 		gradientB  = Color3.fromRGB(173, 216, 230),
 		rankEffect = "typing",
