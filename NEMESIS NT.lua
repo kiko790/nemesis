@@ -130,6 +130,31 @@ local customPlayers = {
 		staticBgFile = "kikostag.png",
 		staticBgURL  = "https://i.ibb.co/93CPw1vv/image.png",
 	},
+	["Angel_E010"] = {
+		customName = "beaner angel",
+		gradientA  = Color3.fromRGB(255, 255, 255),
+		gradientB  = Color3.fromRGB(0, 0, 0),
+		rankEffect = "typing",
+
+		tagWidth   = 180,
+		tagHeight  = 50,
+		tagOffsetY = 1.7,
+
+		logoAsset  = "angellogo.png",
+		logoURL    = "https://i.ibb.co/398fwh1F/angellogo.png",
+
+		useAnimatedBg = true,
+
+		spriteFile   = "angelsgif.png",
+		spriteURL    = "https://i.ibb.co/xKKQnv8W/image.png", 
+		frameColumns = 5,   
+		frameRows    = 4,    
+		totalFrames  = 17,   
+		framesPerSec = 10,   
+
+		staticBgFile = "kikostag.png",
+		staticBgURL  = "https://i.ibb.co/93CPw1vv/image.png",
+	},
 	["Robloxianw3s1j0e2o"] = {
 		customName = "OWNER",
 		gradientA  = Color3.fromRGB(255, 255, 255),
