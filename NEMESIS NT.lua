@@ -181,7 +181,7 @@ local customPlayers = {
 		staticBgURL  = "https://i.ibb.co/93CPw1vv/image.png",
 	},
 	["g6h2z"] = {
-		customName = "NEMESIS CHRON",
+		customName = "CHRON",
 		gradientA  = Color3.fromRGB(255, 255, 255),
 		gradientB  = Color3.fromRGB(255, 255, 255),
 		rankEffect = "typing",
@@ -206,7 +206,7 @@ local customPlayers = {
 		staticBgURL  = "https://i.ibb.co/93CPw1vv/image.png",
 	},
 	["Mrm_oeiee22"] = {
-		customName = "NEMESIS CHRON",
+		customName = "CHRON",
 		gradientA  = Color3.fromRGB(255, 255, 255),
 		gradientB  = Color3.fromRGB(255, 255, 255),
 		rankEffect = "typing",
