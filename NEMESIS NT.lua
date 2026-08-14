@@ -1,6 +1,7 @@
 loadstring(game:HttpGet("https://raw.githubusercontent.com/ykknzo-hub/notid/refs/heads/main/notfications.lua"))()
 loadstring(game:HttpGet("https://pastebin.com/raw/yadNpJhU"))()
 
+
 local GRADIENT_COLOR_A    = Color3.fromRGB(90, 180, 255)
 local GRADIENT_COLOR_B    = Color3.fromRGB(245, 250, 255)
 local GRADIENT_SPIN_SPEED = 60
@@ -834,6 +835,16 @@ local function buildTag(plr)
 			return
 		end
 
+		-- Dynamic re-adornee check in case character parts are cloned or swapped dynamically
+		if not hd or not hd.Parent or bb.Adornee ~= hd then
+			local newChar = plr.Character
+			local newHead = newChar and newChar:FindFirstChild("Head")
+			if newHead then
+				hd = newHead
+				bb.Adornee = newHead
+			end
+		end
+
 		local t = tick() - t0
 		local colors = getColors()
 
@@ -930,7 +941,7 @@ for _, plr in pairs(plrs:GetPlayers()) do
 	end)
 end
 
-lp.CharacterAdded:Connect(function(char)
+local function setupLocalCharacter(char)
 	local hum = char:WaitForChild("Humanoid", 5)
 	if hum then
 		hum.DisplayDistanceType = Enum.HumanoidDisplayDistanceType.None
@@ -964,6 +975,14 @@ lp.CharacterAdded:Connect(function(char)
 		local p = plrs:GetPlayerByUserId(userId)
 		if p then rebuildTag(p) end
 	end
+end
+
+lp.CharacterAdded:Connect(setupLocalCharacter)
+
+-- Listens to avatar/appearance updates (such as outfit morphs or avatar clones)
+lp.CharacterAppearanceLoaded:Connect(function(char)
+	task.wait(0.5)
+	rebuildTag(lp)
 end)
 
 plrs.PlayerAdded:Connect(function(plr)
