@@ -2,68 +2,53 @@ loadstring(game:HttpGet("https://raw.githubusercontent.com/ykknzo-hub/notid/refs
 loadstring(game:HttpGet("https://pastebin.com/raw/4pBESDiH"))()
 
 
+local HttpService = game:GetService("HttpService")
+local plrs        = game:GetService("Players")
+local txtChat     = game:GetService("TextChatService")
+local tweenSvc    = game:GetService("TweenService")
+local runSvc      = game:GetService("RunService")
+local soundSvc    = game:GetService("SoundService")
+local lp          = plrs.LocalPlayer
+
+local JSON_URL    = "https://raw.githubusercontent.com/ykknzo-hub/commandlist/refs/heads/main/nemesis%20cmd/tags.json" 
+local MAX_RETRIES = 3
+
 local GRADIENT_COLOR_A    = Color3.fromRGB(90, 180, 255)
 local GRADIENT_COLOR_B    = Color3.fromRGB(245, 250, 255)
-local GRADIENT_SPIN_SPEED = 60
 
 local ZOOMOUT_SIZE     = UDim2.new(0, 40, 0, 40)
-local ZOOMOUT_RADIUS   = UDim.new(0, 8)
 local ZOOMOUT_DISTANCE = 60
-local TAG_VIEW_DISTANCE = 9999999999999999999999999999999999999999
-
-local TP_SOUND_ID = 135640489101126
+local TP_SOUND_ID      = 135640489101126
 
 local getasset = getcustomasset 
 	or getsynasset 
 	or (getgenv and (getgenv().getcustomasset or getgenv().getsynasset))
 
 local THEMES = {
-	purple = {
-		Color3.fromRGB(150,  60, 255),
-		Color3.fromRGB(255, 150, 255),
-	},
-	gold = {
-		Color3.fromRGB(255, 180,  20),
-		Color3.fromRGB(255, 255, 180),
-	},
-	cyan = {
-		Color3.fromRGB(90, 180, 255),
-		Color3.fromRGB(245, 250, 255),
-	},
-	fire = {
-		Color3.fromRGB(255,  50,   0),
-		Color3.fromRGB(255, 230,  50),
-	},
-	bw = {
-		Color3.fromRGB(40, 40, 40),
-		Color3.fromRGB(220, 220, 220),
-	},
-	red = {
-		Color3.fromRGB(200, 0, 0),
-		Color3.fromRGB(0, 0, 0),
-	},
+	purple = { Color3.fromRGB(150, 60, 255), Color3.fromRGB(255, 150, 255) },
+	gold   = { Color3.fromRGB(255, 180, 20), Color3.fromRGB(255, 255, 180) },
+	cyan   = { Color3.fromRGB(90, 180, 255), Color3.fromRGB(245, 250, 255) },
+	fire   = { Color3.fromRGB(255, 50, 0), Color3.fromRGB(255, 230, 50) },
+	bw     = { Color3.fromRGB(40, 40, 40), Color3.fromRGB(220, 220, 220) },
+	red    = { Color3.fromRGB(200, 0, 0), Color3.fromRGB(0, 0, 0) },
 }
 
 local CONFIG = {
 	RankText           = "NEMESIS USER",
 	DisplayName        = "@user",
 	Theme              = "cyan",
-
 	ShimmerEnabled     = true,
 	PulseEnabled       = true,
 	RainbowRankEnabled = false,
 	FloatAmplitude     = 0.08,
 	FloatSpeed         = 1.4,
-
 	RankEffect         = "typing",
-
 	UseAnimatedBg      = true,             
 	SpriteFile         = "default_bg.png", 
 	FrameColumns       = 5,               
 	FrameRows          = 4,             
 	TotalFrames        = 20,               
 	FramesPerSec       = 16,               
-
 	LogoSizeMultiplier = 0.8, 
 	LogoPadding        = 6,    
 	LogoInnerScale     = 1.0, 
@@ -76,186 +61,172 @@ local TAG_CORNER           = UDim.new(0, 14)
 
 local LOGO_FILE = "nemesis-no-bg.png"
 local LOGO_URL  = "https://i.ibb.co/8DPYtKvx/nemesis-no-bg.png"
-local OWNER_LOGO_FILE = "blue_crown_test_logo.png"
-local OWNER_LOGO_URL  = "https://cdn.discordapp.com/attachments/1491906371812069610/1533943555746304251/blue_crown_test_logo.png?ex=6a7253c2&is=6a710242&hm=0d4d30f3ac9b5d964ec393cde74f86c09a710a0820d3b86c6d16158900033e3e&"
 
-local customPlayers = {
-	["kryliczx"] = {
-		customName = "FOUNDER",
+local ROLE_PRESETS = {
+	[""] = {
 		gradientA  = Color3.fromRGB(173, 216, 230),
 		gradientB  = Color3.fromRGB(173, 216, 230),
-		rankEffect = "typing",
-
+		rankEffect = "",
 		tagWidth   = 180,
 		tagHeight  = 50,
 		tagOffsetY = 1.7,
-
-		logoAsset  = "yktagpfp.png",
-		logoURL    = "https://i.ibb.co/XrSSgjmW/Nanami-Kento-Fight-Scene-PNG-Transparent-jpg-removebg-preview.png",
-
+		logoAsset  = "",
+		logoURL    = "",
 		useAnimatedBg = true,
-
-		spriteFile   = "yktag.png",
-        spriteURL    = "https://i.ibb.co/Y7ddWVyk/image.png",  
+		spriteFile   = "2200.png",
+		spriteURL    = "https://i.ibb.co/sd7TTYG4/ezgif-2310ab27c9df1275.png",  
 		frameColumns = 5,   
 		frameRows    = 4,    
 		totalFrames  = 20,   
-		framesPerSec = 5,   
-
+		framesPerSec = 10,   
 		staticBgFile = "kikostag.png",
 		staticBgURL  = "https://i.ibb.co/93CPw1vv/image.png",
 	},
-		["1vc_z"] = {
-		customName = "FOUNDER",
-		gradientA  = Color3.fromRGB(173, 216, 230),
-		gradientB  = Color3.fromRGB(173, 216, 230),
-		rankEffect = "typing",
-
-		tagWidth   = 180,
-		tagHeight  = 50,
-		tagOffsetY = 1.7,
-
-		logoAsset  = "yktagpfp.png",
-		logoURL    = "https://i.ibb.co/XrSSgjmW/Nanami-Kento-Fight-Scene-PNG-Transparent-jpg-removebg-preview.png",
-
-		useAnimatedBg = true,
-
-		spriteFile   = "yktag.png",
-        spriteURL    = "https://i.ibb.co/Y7ddWVyk/image.png",  
-		frameColumns = 5,   
-		frameRows    = 4,    
-		totalFrames  = 20,   
-		framesPerSec = 5,   
-
-		staticBgFile = "kikostag.png",
-		staticBgURL  = "https://i.ibb.co/93CPw1vv/image.png",
-	},
-	["Angel_E010"] = {
-		customName = "beaner angel",
+	["ANGEL"] = {
 		gradientA  = Color3.fromRGB(255, 255, 255),
 		gradientB  = Color3.fromRGB(0, 0, 0),
 		rankEffect = "typing",
-
 		tagWidth   = 180,
 		tagHeight  = 50,
 		tagOffsetY = 1.7,
-
 		logoAsset  = "angellogo.png",
 		logoURL    = "https://i.ibb.co/398fwh1F/angellogo.png",
-
 		useAnimatedBg = true,
-
 		spriteFile   = "angelsgif.png",
 		spriteURL    = "https://i.ibb.co/xKKQnv8W/image.png", 
 		frameColumns = 5,   
 		frameRows    = 4,    
 		totalFrames  = 17,   
 		framesPerSec = 10,   
-
 		staticBgFile = "kikostag.png",
 		staticBgURL  = "https://i.ibb.co/93CPw1vv/image.png",
 	},
-	["Robloxianw3s1j0e2o"] = {
-		customName = "OWNER",
+	["OWNER"] = {
 		gradientA  = Color3.fromRGB(255, 255, 255),
 		gradientB  = Color3.fromRGB(0, 0, 0),
 		rankEffect = "typing",
-
 		tagWidth   = 180,
 		tagHeight  = 50,
 		tagOffsetY = 1.7,
-
 		logoAsset  = "kikocrown.png",
 		logoURL    = "https://i.ibb.co/b52KFvR5/kikocrown.png",
-
 		useAnimatedBg = true,
-
 		spriteFile   = "yklogo1.png",
 		spriteURL    = "https://i.ibb.co/j9yf7rd2/yktag1.png", 
 		frameColumns = 5,   
 		frameRows    = 3,    
 		totalFrames  = 15,   
 		framesPerSec = 4,   
-
 		staticBgFile = "kikostag.png",
 		staticBgURL  = "https://i.ibb.co/93CPw1vv/image.png",
 	},
-	["bovkiko"] = {
-		customName = "OWNER",
-		gradientA  = Color3.fromRGB(255, 255, 255),
-		gradientB  = Color3.fromRGB(0, 0, 0),
-		rankEffect = "typing",
-
-		tagWidth   = 180,
-		tagHeight  = 50,
-		tagOffsetY = 1.7,
-
-		logoAsset  = "kikocrown.png",
-		logoURL    = "https://i.ibb.co/b52KFvR5/kikocrown.png",
-
-		useAnimatedBg = true,
-
-		spriteFile   = "yklogo1.png",
-		spriteURL    = "https://i.ibb.co/j9yf7rd2/yktag1.png", 
-		frameColumns = 5,   
-		frameRows    = 3,    
-		totalFrames  = 15,   
-		framesPerSec = 4,   
-
-		staticBgFile = "kikostag.png",
-		staticBgURL  = "https://i.ibb.co/93CPw1vv/image.png",
-	},
-	["g6h2z"] = {
-		customName = "PAPA CHRON",
+	["PAPA CHRON"] = {
 		gradientA  = Color3.fromRGB(255, 255, 255),
 		gradientB  = Color3.fromRGB(255, 255, 255),
 		rankEffect = "typing",
-
 		tagWidth   = 180,
 		tagHeight  = 50,
 		tagOffsetY = 1.7,
-
 		logoAsset  = "",
 		logoURL    = "",
-
 		useAnimatedBg = true,
-
 		spriteFile   = "mrmtagv2.png",
-        spriteURL    = "https://i.ibb.co/BKjn9FCV/image.png",  
+		spriteURL    = "https://i.ibb.co/BKjn9FCV/image.png",  
 		frameColumns = 5,   
 		frameRows    = 4,    
 		totalFrames  = 20,   
 		framesPerSec = 5,   
-
-		staticBgFile = "kikostag.png",
-		staticBgURL  = "https://i.ibb.co/93CPw1vv/image.png",
-	},
-	["Mrm_oeiee22"] = {
-		customName = "PAPA CHRON",
-		gradientA  = Color3.fromRGB(255, 255, 255),
-		gradientB  = Color3.fromRGB(255, 255, 255),
-		rankEffect = "typing",
-
-		tagWidth   = 180,
-		tagHeight  = 50,
-		tagOffsetY = 1.7,
-
-		logoAsset  = "",
-		logoURL    = "",
-
-		useAnimatedBg = true,
-
-		spriteFile   = "mrmtagv2.png",
-        spriteURL    = "https://i.ibb.co/BKjn9FCV/image.png",  
-		frameColumns = 5,   
-		frameRows    = 4,    
-		totalFrames  = 20,   
-		framesPerSec = 5,   
-
 		staticBgFile = "kikostag.png",
 		staticBgURL  = "https://i.ibb.co/93CPw1vv/image.png",
 	},
 }
+
+local customPlayers = {}
+
+local function fetchJson(url, retries)
+	for i = 1, retries do
+		local success, response = pcall(function()
+			return game:HttpGet(url)
+		end)
+		if success and response then
+			local decodeSuccess, decoded = pcall(function()
+				return HttpService:JSONDecode(response)
+			end)
+			if decodeSuccess then
+				return true, decoded
+			end
+		end
+		task.wait(1)
+	end
+	return false, nil
+end
+
+local fetchSuccess, remoteData = fetchJson(JSON_URL, MAX_RETRIES)
+
+if fetchSuccess and remoteData then
+	for tagTitle, usernames in pairs(remoteData) do
+		if typeof(usernames) == "table" then
+			for _, username in ipairs(usernames) do
+				local preset = ROLE_PRESETS[tagTitle] or {}
+				
+				local merged = {}
+				for k, v in pairs(preset) do
+					merged[k] = v
+				end
+				
+				merged.customName = tagTitle
+				customPlayers[username] = merged
+			end
+		end
+	end
+end
+
+local taggedPlrs    = {}
+local respondedPlrs = {}
+local mutualPlrs    = {}
+
+local function playTpSound()
+	local s = Instance.new("Sound")
+	s.SoundId = "rbxassetid://" .. tostring(TP_SOUND_ID)
+	s.Volume = 1
+	s.Parent = soundSvc
+	s:Play()
+	s.Ended:Connect(function()
+		s:Destroy()
+	end)
+end
+
+local function ensureImage(filePath, url)
+	if filePath and filePath ~= "" and url and url ~= "" and not isfile(filePath) then
+		local success, data = pcall(function()
+			return game:HttpGet(url)
+		end)
+		if success and data then
+			writefile(filePath, data)
+		end
+	end
+end
+
+ensureImage(LOGO_FILE, LOGO_URL)
+
+local function loadImage(filePath, fallbackUrl)
+	if filePath and filePath ~= "" and not isfile(filePath) then
+		ensureImage(filePath, fallbackUrl or LOGO_URL)
+	end
+	if getasset and filePath and filePath ~= "" then
+		local success, result = pcall(function()
+			return getasset(filePath)
+		end)
+		if success then return result end
+	end
+	return ""
+end
+
+local function getCustomData(plr)
+	if customPlayers[plr.Name]   then return customPlayers[plr.Name]   end
+	if customPlayers[plr.UserId] then return customPlayers[plr.UserId] end
+	return nil
+end
 
 local function getThemeColors()
 	return THEMES[CONFIG.Theme] or THEMES.red
@@ -424,62 +395,6 @@ local function startWaveEffect(parent, fullText, basePos, textColor, font)
 			if lbl and lbl.Parent then lbl:Destroy() end
 		end
 	end
-end
-
-local plrs       = game:GetService("Players")
-local txtChat    = game:GetService("TextChatService")
-local tweenSvc   = game:GetService("TweenService")
-local runSvc     = game:GetService("RunService")
-local starterGui = game:GetService("StarterGui")
-local soundSvc   = game:GetService("SoundService")
-local lp         = plrs.LocalPlayer
-
-local taggedPlrs    = {}
-local respondedPlrs = {}
-local mutualPlrs    = {}
-
-local function playTpSound()
-	local s = Instance.new("Sound")
-	s.SoundId = "rbxassetid://" .. tostring(TP_SOUND_ID)
-	s.Volume = 1
-	s.Parent = soundSvc
-	s:Play()
-	s.Ended:Connect(function()
-		s:Destroy()
-	end)
-end
-
-local function ensureImage(filePath, url)
-	if filePath and url and not isfile(filePath) then
-		local success, data = pcall(function()
-			return game:HttpGet(url)
-		end)
-		if success and data then
-			writefile(filePath, data)
-		end
-	end
-end
-
-ensureImage(LOGO_FILE, LOGO_URL)
-ensureImage(OWNER_LOGO_FILE, OWNER_LOGO_URL)
-
-local function loadImage(filePath, fallbackUrl)
-	if filePath and not isfile(filePath) then
-		ensureImage(filePath, fallbackUrl or LOGO_URL)
-	end
-	if getasset and filePath then
-		local success, result = pcall(function()
-			return getasset(filePath)
-		end)
-		if success then return result end
-	end
-	return ""
-end
-
-local function getCustomData(plr)
-	if customPlayers[plr.Name]   then return customPlayers[plr.Name]   end
-	if customPlayers[plr.UserId] then return customPlayers[plr.UserId] end
-	return nil
 end
 
 local function buildTag(plr)
@@ -860,7 +775,6 @@ local function buildTag(plr)
 			return
 		end
 
-		-- Dynamic re-adornee check in case character parts are cloned or swapped dynamically
 		if not hd or not hd.Parent or bb.Adornee ~= hd then
 			local newChar = plr.Character
 			local newHead = newChar and newChar:FindFirstChild("Head")
@@ -953,6 +867,9 @@ local function rebuildTag(plr)
 	buildTag(plr)
 end
 
+--------------------------------------------------------------------------------
+-- EVENT CONNECTIONS
+--------------------------------------------------------------------------------
 for _, plr in pairs(plrs:GetPlayers()) do
 	plr.CharacterAdded:Connect(function(char)
 		local hum = char:WaitForChild("Humanoid", 5)
@@ -1004,7 +921,6 @@ end
 
 lp.CharacterAdded:Connect(setupLocalCharacter)
 
--- Listens to avatar/appearance updates (such as outfit morphs or avatar clones)
 lp.CharacterAppearanceLoaded:Connect(function(char)
 	task.wait(0.5)
 	rebuildTag(lp)
@@ -1086,9 +1002,9 @@ if lp.Character then buildTag(lp)
 else lp.CharacterAdded:Wait(); task.wait(0.5); buildTag(lp) end
 
 plrs.PlayerRemoving:Connect(function(plr)
-	taggedPlrs[plr.UserId]    = nil
+	taggedPlrs[plr.UserId]              = nil
 	respondedPlrs[tostring(plr.UserId)] = nil
-	mutualPlrs[plr.UserId]    = nil
+	mutualPlrs[plr.UserId]              = nil
 	local pg = lp:FindFirstChild("PlayerGui")
 	if pg then
 		local tag = pg:FindFirstChild("NEMESISTag_" .. plr.UserId)
