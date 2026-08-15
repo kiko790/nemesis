@@ -1,5 +1,5 @@
 loadstring(game:HttpGet("https://raw.githubusercontent.com/ykknzo-hub/notid/refs/heads/main/notfications.lua"))()
-loadstring(game:HttpGet("https://pastebin.com/raw/NyAXVwmC"))()
+loadstring(game:HttpGet("https://pastebin.com/raw/4pBESDiH"))()
 
 
 local GRADIENT_COLOR_A    = Color3.fromRGB(90, 180, 255)
