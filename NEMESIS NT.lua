@@ -139,7 +139,7 @@ local ROLE_PRESETS = {
 		staticBgFile = "kikostag.png",
 		staticBgURL  = "https://i.ibb.co/93CPw1vv/image.png",
 	},
-		["CHRON OWNS ME"] = {
+	["CHRON OWNS ME"] = {
         gradientA  = Color3.fromRGB(0, 0, 0),
         gradientB  = Color3.fromRGB(255, 255, 255),
 		rankEffect = "typing",
@@ -157,8 +157,7 @@ local ROLE_PRESETS = {
 		framesPerSec = 5,   
 		spriteFile   = "chronsgirltag.png",
 		spriteURL    = "https://i.ibb.co/jPP2G95m/chronsgirltag.png",  
-	}
-}
+	},
 }
 
 local customPlayers = {}
