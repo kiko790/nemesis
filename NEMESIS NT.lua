@@ -157,7 +157,7 @@ local ROLE_PRESETS = {
 		framesPerSec = 5,   
 		spriteFile   = "chronsgirltag.png",
 		spriteURL    = "https://i.ibb.co/jPP2G95m/chronsgirltag.png",  
-	},
+	}
 }
 }
 
