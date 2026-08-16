@@ -1,66 +1,49 @@
-loadstring(game:HttpGet("https://raw.githubusercontent.com/ykknzo-hub/notid/refs/heads/main/notfications.lua"))()
-loadstring(game:HttpGet("https://pastebin.com/raw/4pBESDiH"))()
-
-
 local HttpService = game:GetService("HttpService")
-local plrs        = game:GetService("Players")
-local txtChat     = game:GetService("TextChatService")
-local tweenSvc    = game:GetService("TweenService")
-local runSvc      = game:GetService("RunService")
-local soundSvc    = game:GetService("SoundService")
-local lp          = plrs.LocalPlayer
+local plrs = game:GetService("Players")
+local tweenSvc = game:GetService("TweenService")
+local runSvc = game:GetService("RunService")
+local soundSvc = game:GetService("SoundService")
+local lp = plrs.LocalPlayer
 
-local JSON_URL    = "https://raw.githubusercontent.com/ykknzo-hub/commandlist/refs/heads/main/nemesis%20cmd/tags.json" 
+local API_URL = "https://backend.kenzielimonn.workers.dev"
+local API_SECRET = "Pondelok5"
+
+local JSON_URL = "https://raw.githubusercontent.com/ykknzo-hub/commandlist/refs/heads/main/nemesis%20cmd/tags.json"
 local MAX_RETRIES = 3
+local GRADIENT_COLOR_A = Color3.fromRGB(90, 180, 255)
+local GRADIENT_COLOR_B = Color3.fromRGB(245, 250, 255)
+local TP_SOUND_ID = 135640489101126
 
-local GRADIENT_COLOR_A    = Color3.fromRGB(90, 180, 255)
-local GRADIENT_COLOR_B    = Color3.fromRGB(245, 250, 255)
-
-local ZOOMOUT_SIZE     = UDim2.new(0, 40, 0, 40)
-local ZOOMOUT_DISTANCE = 60
-local TP_SOUND_ID      = 135640489101126
-
-local getasset = getcustomasset 
-	or getsynasset 
-	or (getgenv and (getgenv().getcustomasset or getgenv().getsynasset))
+local getasset = getcustomasset or getsynasset or (getgenv and (getgenv().getcustomasset or getgenv().getsynasset))
 
 local THEMES = {
 	purple = { Color3.fromRGB(150, 60, 255), Color3.fromRGB(255, 150, 255) },
-	gold   = { Color3.fromRGB(255, 180, 20), Color3.fromRGB(255, 255, 180) },
-	cyan   = { Color3.fromRGB(90, 180, 255), Color3.fromRGB(245, 250, 255) },
-	fire   = { Color3.fromRGB(255, 50, 0), Color3.fromRGB(255, 230, 50) },
-	bw     = { Color3.fromRGB(40, 40, 40), Color3.fromRGB(220, 220, 220) },
-	red    = { Color3.fromRGB(200, 0, 0), Color3.fromRGB(0, 0, 0) },
+	gold = { Color3.fromRGB(255, 180, 20), Color3.fromRGB(255, 255, 180) },
+	cyan = { Color3.fromRGB(90, 180, 255), Color3.fromRGB(245, 250, 255) },
+	fire = { Color3.fromRGB(255, 50, 0), Color3.fromRGB(255, 230, 50) },
+	bw = { Color3.fromRGB(40, 40, 40), Color3.fromRGB(220, 220, 220) },
+	red = { Color3.fromRGB(200, 0, 0), Color3.fromRGB(0, 0, 0) },
 }
 
 local CONFIG = {
-	RankText           = "NEMESIS USER",
-	DisplayName        = "@user",
-	Theme              = "cyan",
-	ShimmerEnabled     = true,
-	PulseEnabled       = true,
+	RankText = "NEMESIS USER",
+	Theme = "cyan",
+	ShimmerEnabled = true,
+	PulseEnabled = true,
 	RainbowRankEnabled = false,
-	FloatAmplitude     = 0.08,
-	FloatSpeed         = 1.4,
-	RankEffect         = "typing",
-	UseAnimatedBg      = true,             
-	SpriteFile         = "default_bg.png", 
-	FrameColumns       = 5,               
-	FrameRows          = 4,             
-	TotalFrames        = 20,               
-	FramesPerSec       = 16,               
-	LogoSizeMultiplier = 0.8, 
-	LogoPadding        = 6,    
-	LogoInnerScale     = 1.0, 
+	FloatAmplitude = 0.08,
+	FloatSpeed = 1.4,
+	RankEffect = "typing",
+	LogoSizeMultiplier = 0.8,
+	LogoPadding = 6,
 }
 
-local DEFAULT_TAG_WIDTH    = 180
-local DEFAULT_TAG_HEIGHT   = 50
-local DEFAULT_TAG_OFFSET_Y = 1.7  
-local TAG_CORNER           = UDim.new(0, 14) 
-
+local DEFAULT_TAG_WIDTH = 180
+local DEFAULT_TAG_HEIGHT = 50
+local DEFAULT_TAG_OFFSET_Y = 1.7
+local TAG_CORNER = UDim.new(0, 14)
 local LOGO_FILE = "nemesis-no-bg.png"
-local LOGO_URL  = "https://i.ibb.co/8DPYtKvx/nemesis-no-bg.png"
+local LOGO_URL = "https://i.ibb.co/8DPYtKvx/nemesis-no-bg.png"
 
 local ROLE_PRESETS = {
 	[""] = {
@@ -121,8 +104,8 @@ local ROLE_PRESETS = {
 		staticBgURL  = "https://i.ibb.co/93CPw1vv/image.png",
 	},
 	["ᴘᴀᴘᴀ ᴄʜʀᴏɴ"] = {
-        gradientA  = Color3.fromRGB(0, 0, 0),
-        gradientB  = Color3.fromRGB(255, 255, 255),
+		gradientA  = Color3.fromRGB(0, 0, 0),
+		gradientB  = Color3.fromRGB(255, 255, 255),
 		rankEffect = "typing",
 		tagWidth   = 180,
 		tagHeight  = 50,
@@ -140,8 +123,8 @@ local ROLE_PRESETS = {
 		staticBgURL  = "https://i.ibb.co/Hf20kTQv/chrontagv2.png",
 	},
 	["CHRON OWNS ME"] = {
-        gradientA  = Color3.fromRGB(0, 0, 0),
-        gradientB  = Color3.fromRGB(255, 255, 255),
+		gradientA  = Color3.fromRGB(0, 0, 0),
+		gradientB  = Color3.fromRGB(255, 255, 255),
 		rankEffect = "typing",
 		tagWidth   = 180,
 		tagHeight  = 50,
@@ -149,50 +132,111 @@ local ROLE_PRESETS = {
 		logoAsset  = "",
 		logoURL    = "",
 		useAnimatedBg = true,
-		spriteFile   = "mrmtagv2.png",
-		spriteURL    = "https://i.ibb.co/BKjn9FCV/image.png",  
+		spriteFile   = "chronsgirltag.png",
+		spriteURL    = "https://i.ibb.co/jPP2G95m/chronsgirltag.png",  
 		frameColumns = 5,   
 		frameRows    = 4,    
 		totalFrames  = 20,   
 		framesPerSec = 5,   
-		spriteFile   = "chronsgirltag.png",
-		spriteURL    = "https://i.ibb.co/jPP2G95m/chronsgirltag.png",  
 	},
 }
 
 local customPlayers = {}
+local taggedPlrs = {}
+local registeredPlrs = {}
 
+-- ===================== REQUEST =====================
+local function request(method, url, body)
+	local req = (syn and syn.request) or http_request or request or (fluxus and fluxus.request) or (http and http.request)
+
+	if req then
+		local success, response = pcall(function()
+			return req({
+				Url = url,
+				Method = method,
+				Headers = { ["Content-Type"] = "application/json" },
+				Body = body and HttpService:JSONEncode(body) or nil
+			})
+		end)
+		if success and response and response.Body then
+			return response.Body
+		end
+	end
+
+	local success, res = pcall(function()
+		if method == "POST" then
+			return game:HttpPost(url, body and HttpService:JSONEncode(body) or "", true)
+		else
+			return game:HttpGet(url)
+		end
+	end)
+	return success and res or nil
+end
+
+local function api(method, path, body)
+	local url = API_URL .. path .. "?secret=" .. API_SECRET
+	local res = request(method, url, body)
+	if res then
+		local ok, data = pcall(function()
+			return HttpService:JSONDecode(res)
+		end)
+		if ok then return data end
+	end
+	return nil
+end
+
+local function registerSelf()
+	api("POST", "/register", {
+		userId = lp.UserId,
+		username = lp.Name
+	})
+end
+
+local function refreshActiveUsers()
+	local list = api("GET", "/active")
+	if type(list) ~= "table" then return end
+
+	local newRegistered = {}
+	for _, id in ipairs(list) do
+		newRegistered[tonumber(id)] = true
+	end
+	newRegistered[lp.UserId] = true
+	registeredPlrs = newRegistered
+
+	for _, plr in pairs(plrs:GetPlayers()) do
+		if registeredPlrs[plr.UserId] and not taggedPlrs[plr.UserId] then
+			if plr.Character and plr.Character:FindFirstChild("Head") then
+				task.spawn(buildTag, plr)
+			end
+		end
+	end
+end
+
+-- ===================== JSON =====================
 local function fetchJson(url, retries)
 	for i = 1, retries do
 		local success, response = pcall(function()
 			return game:HttpGet(url)
 		end)
 		if success and response then
-			local decodeSuccess, decoded = pcall(function()
+			local ok, decoded = pcall(function()
 				return HttpService:JSONDecode(response)
 			end)
-			if decodeSuccess then
-				return true, decoded
-			end
+			if ok then return true, decoded end
 		end
 		task.wait(1)
 	end
 	return false, nil
 end
 
-local fetchSuccess, remoteData = fetchJson(JSON_URL, MAX_RETRIES)
-
-if fetchSuccess and remoteData then
+local ok, remoteData = fetchJson(JSON_URL, MAX_RETRIES)
+if ok and remoteData then
 	for tagTitle, usernames in pairs(remoteData) do
-		if typeof(usernames) == "table" then
+		if type(usernames) == "table" then
 			for _, username in ipairs(usernames) do
 				local preset = ROLE_PRESETS[tagTitle] or {}
-				
 				local merged = {}
-				for k, v in pairs(preset) do
-					merged[k] = v
-				end
-				
+				for k, v in pairs(preset) do merged[k] = v end
 				merged.customName = tagTitle
 				customPlayers[username] = merged
 			end
@@ -200,102 +244,55 @@ if fetchSuccess and remoteData then
 	end
 end
 
-local taggedPlrs    = {}
-local respondedPlrs = {}
-local mutualPlrs    = {}
-
+-- ===================== UTILS =====================
 local function playTpSound()
 	local s = Instance.new("Sound")
-	s.SoundId = "rbxassetid://" .. tostring(TP_SOUND_ID)
+	s.SoundId = "rbxassetid://" .. TP_SOUND_ID
 	s.Volume = 1
 	s.Parent = soundSvc
 	s:Play()
-	s.Ended:Connect(function()
-		s:Destroy()
-	end)
+	s.Ended:Connect(function() s:Destroy() end)
 end
 
-local function ensureImage(filePath, url)
-	if filePath and filePath ~= "" and url and url ~= "" and not isfile(filePath) then
-		local success, data = pcall(function()
-			return game:HttpGet(url)
-		end)
-		if success and data then
-			writefile(filePath, data)
-		end
+local function ensureImage(file, url)
+	if file and url and file ~= "" and url ~= "" and not isfile(file) then
+		local success, data = pcall(game.HttpGet, game, url)
+		if success and data then writefile(file, data) end
 	end
 end
 
 ensureImage(LOGO_FILE, LOGO_URL)
 
-local function loadImage(filePath, fallbackUrl)
-	if filePath and filePath ~= "" and not isfile(filePath) then
-		ensureImage(filePath, fallbackUrl or LOGO_URL)
-	end
-	if getasset and filePath and filePath ~= "" then
-		local success, result = pcall(function()
-			return getasset(filePath)
-		end)
+local function loadImage(file, fallback)
+	if file and file ~= "" and not isfile(file) then ensureImage(file, fallback or LOGO_URL) end
+	if getasset and file and file ~= "" and isfile(file) then
+		local success, result = pcall(getasset, file)
 		if success then return result end
 	end
-	return ""
+	return fallback or ""
 end
 
 local function getCustomData(plr)
-	if customPlayers[plr.Name]   then return customPlayers[plr.Name]   end
-	if customPlayers[plr.UserId] then return customPlayers[plr.UserId] end
-	return nil
+	return customPlayers[plr.Name] or customPlayers[plr.UserId]
 end
 
 local function getThemeColors()
-	return THEMES[CONFIG.Theme] or THEMES.red
+	return THEMES[CONFIG.Theme] or THEMES.cyan
 end
-
-local function lerp(a, b, t) return a + (b - a) * t end
-
-local function lerpColor(c1, c2, t)
-	return Color3.new(
-		lerp(c1.R, c2.R, t),
-		lerp(c1.G, c2.G, t),
-		lerp(c1.B, c2.B, t)
-	)
-end
-
-local function cyclicLerp(colors, t)
-	local n    = #colors
-	local pos  = (t % 1) * n
-	local idx  = math.floor(pos) + 1
-	local frac = pos - math.floor(pos)
-	local c1   = colors[idx]
-	local c2   = colors[(idx % n) + 1]
-	return lerpColor(c1, c2, frac)
-end
-
-local function makeColorSequence(colors)
-	local kps = {}
-	for i, c in ipairs(colors) do
-		kps[i] = ColorSequenceKeypoint.new((i - 1) / (#colors - 1), c)
-	end
-	return ColorSequence.new(kps)
-end
-
-local function randomBetween(a, b) return a + math.random() * (b - a) end
 
 local function startTypingEffect(label, fullText)
 	task.spawn(function()
-		local chars   = #fullText
-		local phase   = "pause_full"
-		local blinks  = 0
-		local curOn   = true
-
+		local chars = #fullText
+		local phase = "pause_full"
+		local blinks = 0
+		local curOn = true
 		while label and label.Parent do
 			if phase == "pause_full" then
 				label.Text = fullText .. "|"
 				task.wait(1.5)
-				phase  = "blink_loop"
+				phase = "blink_loop"
 				blinks = 0
-				curOn  = true
-
+				curOn = true
 			elseif phase == "blink_loop" then
 				curOn = not curOn
 				label.Text = curOn and (fullText .. "|") or fullText
@@ -304,20 +301,16 @@ local function startTypingEffect(label, fullText)
 				if blinks >= 3 then
 					task.wait(0.3)
 					phase = "delete"
-					label.Text = fullText .. "|"
 				end
-
 			elseif phase == "delete" then
 				if chars > 0 then
 					chars = chars - 1
 					label.Text = string.sub(fullText, 1, chars) .. "|"
 					task.wait(0.05)
 				else
-					phase = "pause_empty"
 					task.wait(0.4)
 					phase = "type"
 				end
-
 			elseif phase == "type" then
 				if chars < #fullText then
 					chars = chars + 1
@@ -331,97 +324,13 @@ local function startTypingEffect(label, fullText)
 	end)
 end
 
-local GLITCH_CHARS = {"#","@","!","$","%","&","?","*","/","\\","|","~","^","X","Z"}
-
-local function glitchString(original)
-	local result = {}
-	for i = 1, #original do
-		if math.random() < 0.4 then
-			result[i] = GLITCH_CHARS[math.random(1, #GLITCH_CHARS)]
-		else
-			result[i] = string.sub(original, i, i)
-		end
-	end
-	return table.concat(result)
-end
-
-local function startGlitchEffect(label, fullText)
-	task.spawn(function()
-		while label and label.Parent do
-			task.wait(randomBetween(2.0, 4.5))
-			if not label or not label.Parent then break end
-			local iters = math.random(5, 10)
-			for _ = 1, iters do
-				if not label or not label.Parent then break end
-				label.Text = glitchString(fullText)
-				task.wait(0.04)
-			end
-			if label and label.Parent then
-				label.Text = fullText
-			end
-		end
-	end)
-end
-
-local function startWaveEffect(parent, fullText, basePos, textColor, font)
-	local CHAR_W  = 7
-	local startX  = basePos.X.Offset
-	local startYs = basePos.Y.Scale
-	local startYo = basePos.Y.Offset
-
-	local charLabels = {}
-	for i = 1, #fullText do
-		local ch  = string.sub(fullText, i, i)
-		local lbl = Instance.new("TextLabel")
-		lbl.Parent               = parent
-		lbl.Size                 = UDim2.new(0, CHAR_W + 2, 0, 16)
-		lbl.Position             = UDim2.new(basePos.X.Scale, startX + (i - 1) * CHAR_W, startYs, startYo)
-		lbl.BackgroundTransparency = 1
-		lbl.Text                 = ch == " " and "\u{00A0}" or ch
-		lbl.TextColor3           = textColor
-		lbl.Font                 = font
-		lbl.TextScaled           = false
-		lbl.TextSize             = 12
-		lbl.TextStrokeTransparency = 0.5
-		lbl.TextStrokeColor3     = Color3.fromRGB(0, 0, 0)
-		lbl.ZIndex               = 5
-		charLabels[i]            = lbl
-	end
-
-	local running = true
-
-	task.spawn(function()
-		local t = 0
-		while running do
-			t = t + 0.05
-			for i, lbl in ipairs(charLabels) do
-				if not lbl or not lbl.Parent then running = false break end
-				local wave = math.sin(t * 4 + (i - 1) * 0.75) * 2.8
-				lbl.Position = UDim2.new(
-					basePos.X.Scale,
-					startX + (i - 1) * CHAR_W,
-					startYs,
-					startYo + wave
-				)
-			end
-			task.wait(0.05)
-		end
-	end)
-
-	return function()
-		running = false
-		for _, lbl in ipairs(charLabels) do
-			if lbl and lbl.Parent then lbl:Destroy() end
-		end
-	end
-end
-
-local function buildTag(plr)
-	if not mutualPlrs[plr.UserId] then return end
+-- ===================== BUILD TAG =====================
+function buildTag(plr)
+	if not registeredPlrs[plr.UserId] then return end
 	local char = plr.Character
 	if not char then return end
-	local hd  = char:FindFirstChild("Head")
-	if not hd  then return end
+	local hd = char:FindFirstChild("Head")
+	if not hd then return end
 	local hrp = char:FindFirstChild("HumanoidRootPart")
 	if not hrp then return end
 
@@ -429,58 +338,47 @@ local function buildTag(plr)
 
 	local pg = lp:WaitForChild("PlayerGui")
 	for _, obj in pairs(pg:GetChildren()) do
-		if obj.Name == "NEMESISTag_" .. plr.UserId then obj:Destroy() end
+		if obj.Name == "NEMESISTag_" .. plr.UserId then
+			obj:Destroy()
+		end
 	end
 
-	local customData  = getCustomData(plr)
+	local customData = getCustomData(plr)
 	local displayName = customData and customData.customName or CONFIG.RankText
-	local gradA       = (customData and customData.gradientA) or GRADIENT_COLOR_A
-	local gradB       = (customData and customData.gradientB) or GRADIENT_COLOR_B
-
-	local tagWidth       = (customData and customData.tagWidth) or DEFAULT_TAG_WIDTH
-	local tagHeight      = (customData and customData.tagHeight) or DEFAULT_TAG_HEIGHT
-	local tagOffsetY     = (customData and customData.tagOffsetY) or DEFAULT_TAG_OFFSET_Y
+	local gradA = (customData and customData.gradientA) or GRADIENT_COLOR_A
+	local gradB = (customData and customData.gradientB) or GRADIENT_COLOR_B
+	local tagWidth = (customData and customData.tagWidth) or DEFAULT_TAG_WIDTH
+	local tagHeight = (customData and customData.tagHeight) or DEFAULT_TAG_HEIGHT
+	local tagOffsetY = (customData and customData.tagOffsetY) or DEFAULT_TAG_OFFSET_Y
 	local currentTagSize = UDim2.new(0, tagWidth, 0, tagHeight)
-	local currentTagOff  = Vector3.new(0, tagOffsetY, 0)
-
-	local resolvedRankEffect
-	if customData then
-		resolvedRankEffect = customData.rankEffect or "none"
-	else
-		resolvedRankEffect = CONFIG.RankEffect
-	end
+	local currentTagOff = Vector3.new(0, tagOffsetY, 0)
+	local resolvedRankEffect = (customData and customData.rankEffect) or CONFIG.RankEffect
 
 	local function getColors()
-		if gradA and gradB then
-			return {gradA, gradB}
-		end
-		if plr == lp then
-			return getThemeColors()
-		end
-		return {GRADIENT_COLOR_A, GRADIENT_COLOR_B}
+		if gradA and gradB then return {gradA, gradB} end
+		return plr == lp and getThemeColors() or {GRADIENT_COLOR_A, GRADIENT_COLOR_B}
 	end
 
 	local finalColors = getColors()
-	local tagColor    = finalColors[1] or Color3.fromRGB(255, 0, 0)
 
 	local bb = Instance.new("BillboardGui")
-	bb.Name        = "NEMESISTag_" .. plr.UserId
-	bb.Parent      = pg
-	bb.Size        = currentTagSize
+	bb.Name = "NEMESISTag_" .. plr.UserId
+	bb.Parent = pg
+	bb.Size = currentTagSize
 	bb.StudsOffset = currentTagOff
 	bb.AlwaysOnTop = true
-	bb.MaxDistance  = math.huge
-	bb.Adornee     = hd
-	bb.Active      = true
+	bb.MaxDistance = math.huge
+	bb.Adornee = hd
+	bb.Active = true
 
 	local btn = Instance.new("TextButton")
-	btn.Parent               = bb
-	btn.Size                 = UDim2.new(1, 0, 1, 0)
+	btn.Parent = bb
+	btn.Size = UDim2.new(1, 0, 1, 0)
 	btn.BackgroundTransparency = 1
-	btn.Text                 = ""
-	btn.ZIndex               = 20
-	btn.AutoButtonColor      = false
-	btn.Active               = true
+	btn.Text = ""
+	btn.ZIndex = 20
+	btn.AutoButtonColor = false
+
 	if plr ~= lp then
 		btn.MouseButton1Click:Connect(function()
 			local myChar = lp.Character
@@ -492,311 +390,150 @@ local function buildTag(plr)
 	end
 
 	local bg = Instance.new("Frame")
-	bg.Parent               = bb
-	bg.Size                 = UDim2.new(1, 0, 1, 0)
-	bg.BackgroundColor3     = Color3.fromRGB(15, 12, 24)
-	bg.BorderSizePixel      = 0
+	bg.Name = "TagContainer"
+	bg.Parent = bb
+	bg.Size = UDim2.new(1, 0, 1, 0)
+	bg.BackgroundColor3 = Color3.fromRGB(15, 12, 24)
 	bg.BackgroundTransparency = 0.12
-	bg.ZIndex               = 1
-	bg.ClipsDescendants     = true 
+	bg.BorderSizePixel = 0
+	bg.ZIndex = 1
+	bg.ClipsDescendants = true
 	Instance.new("UICorner", bg).CornerRadius = TAG_CORNER
 
 	local bgGrad = Instance.new("UIGradient")
 	bgGrad.Color = ColorSequence.new({
 		ColorSequenceKeypoint.new(0, finalColors[1]),
-		ColorSequenceKeypoint.new(1, finalColors[2] or finalColors[1]),
+		ColorSequenceKeypoint.new(1, finalColors[2] or finalColors[1])
 	})
 	bgGrad.Rotation = 135
-	bgGrad.Parent   = bg
+	bgGrad.Parent = bg
 
-	local isAnimatedBg = customData and customData.useAnimatedBg
-	local staticBgFile = customData and customData.staticBgFile
-	local staticBgURL  = customData and customData.staticBgURL
+	if customData then
+		if customData.useAnimatedBg and customData.spriteFile and customData.spriteURL then
+			local spriteImg = Instance.new("ImageLabel")
+			spriteImg.Name = "AnimatedBg"
+			spriteImg.Parent = bg
+			spriteImg.Size = UDim2.new(1, 0, 1, 0)
+			spriteImg.Position = UDim2.new(0, 0, 0, 0)
+			spriteImg.BackgroundTransparency = 1
+			spriteImg.Image = loadImage(customData.spriteFile, customData.spriteURL)
+			spriteImg.ScaleType = Enum.ScaleType.Stretch
+			spriteImg.ZIndex = 2
+			Instance.new("UICorner", spriteImg).CornerRadius = TAG_CORNER
 
-	if isAnimatedBg then
-		local spriteFileName = customData.spriteFile or "testing.png"
-		local spriteURL      = customData.spriteURL
-		local cols           = customData.frameColumns or 5
-		local rows           = customData.frameRows or 4
-		local totFrames      = customData.totalFrames or 20
-		local fps            = customData.framesPerSec or 12
-		
-		ensureImage(spriteFileName, spriteURL)
-
-		if getasset and isfile(spriteFileName) then
-			local animImage = Instance.new("ImageLabel")
-			animImage.Name                 = "AnimatedBg"
-			animImage.Size                 = UDim2.new(1, 0, 1, 0)
-			animImage.Position             = UDim2.new(0, 0, 0, 0)
-			animImage.BackgroundTransparency = 1
-			animImage.Image                = getasset(spriteFileName)
-			animImage.ScaleType            = Enum.ScaleType.Crop
-			animImage.ZIndex               = 2
-			animImage.Parent               = bg
-			Instance.new("UICorner", animImage).CornerRadius = TAG_CORNER
+			local cols = customData.frameColumns or 1
+			local rows = customData.frameRows or 1
+			local total = customData.totalFrames or (cols * rows)
+			local fps = customData.framesPerSec or 10
 
 			task.spawn(function()
-				while animImage and animImage.Parent and animImage.ContentImageSize == Vector2.zero do
-					task.wait()
+				while bb and bb.Parent and spriteImg.ContentImageSize.X == 0 do
+					task.wait(0.1)
 				end
+				if not bb or not bb.Parent then return end
 
-				if animImage and animImage.Parent then
-					local realWidth   = animImage.ContentImageSize.X
-					local realHeight  = animImage.ContentImageSize.Y
-					local fWidth      = realWidth / cols
-					local fHeight     = realHeight / rows
+				local imgWidth = spriteImg.ContentImageSize.X
+				local imgHeight = spriteImg.ContentImageSize.Y
+				local frameW = imgWidth / cols
+				local frameH = imgHeight / rows
 
-					animImage.ImageRectSize = Vector2.new(fWidth, fHeight)
+				spriteImg.ImageRectSize = Vector2.new(frameW, frameH)
 
-					local currentFrame = 0
-					local elapsed      = 0
-					local frameDur     = 1 / fps
+				local currentFrame = 0
+				while bb and bb.Parent do
+					local col = currentFrame % cols
+					local row = math.floor(currentFrame / cols)
 
-					local animConn
-					animConn = runSvc.Heartbeat:Connect(function(dt)
-						if not animImage or not animImage.Parent or not bb or not bb.Parent then
-							animConn:Disconnect()
-							return
-						end
-
-						elapsed = elapsed + dt
-						if elapsed >= frameDur then
-							elapsed = elapsed % frameDur
-							currentFrame = (currentFrame + 1) % totFrames
-
-							local c = currentFrame % cols
-							local r = math.floor(currentFrame / cols)
-							animImage.ImageRectOffset = Vector2.new(c * fWidth, r * fHeight)
-						end
-					end)
+					spriteImg.ImageRectOffset = Vector2.new(col * frameW, row * frameH)
+					currentFrame = (currentFrame + 1) % total
+					task.wait(1 / fps)
 				end
 			end)
+		elseif customData.staticBgFile and customData.staticBgURL then
+			local staticImg = Instance.new("ImageLabel")
+			staticImg.Name = "StaticBg"
+			staticImg.Parent = bg
+			staticImg.Size = UDim2.new(1, 0, 1, 0)
+			staticImg.BackgroundTransparency = 1
+			staticImg.Image = loadImage(customData.staticBgFile, customData.staticBgURL)
+			staticImg.ScaleType = Enum.ScaleType.Stretch
+			staticImg.ZIndex = 2
+			Instance.new("UICorner", staticImg).CornerRadius = TAG_CORNER
 		end
-	elseif staticBgFile then
-		local staticImage = Instance.new("ImageLabel")
-		staticImage.Name                 = "StaticBg"
-		staticImage.Size                 = UDim2.new(1, 0, 1, 0)
-		staticImage.Position             = UDim2.new(0, 0, 0, 0)
-		staticImage.BackgroundTransparency = 1
-		staticImage.Image                = loadImage(staticBgFile, staticBgURL)
-		staticImage.ScaleType            = Enum.ScaleType.Crop
-		staticImage.ZIndex               = 2
-		staticImage.Parent               = bg
-		Instance.new("UICorner", staticImage).CornerRadius = TAG_CORNER
 	end
 
-	local stroke = Instance.new("UIStroke")
-	stroke.Parent          = bg
-	stroke.Color           = Color3.fromRGB(255, 255, 255)
-	stroke.Thickness       = 1.5
-	stroke.ApplyStrokeMode = Enum.ApplyStrokeMode.Border
-	stroke.Transparency    = 0.4
-	local strokeGrad = Instance.new("UIGradient")
-	strokeGrad.Color    = ColorSequence.new(finalColors[1], finalColors[2] or finalColors[1])
-	strokeGrad.Rotation = 0
-	strokeGrad.Parent   = stroke
-
-	local shimmer = Instance.new("Frame")
-	shimmer.Name                       = "Shimmer"
-	shimmer.Size                       = UDim2.new(0.35, 0, 1, 0)
-	shimmer.Position                   = UDim2.new(-0.35, 0, 0, 0)
-	shimmer.BackgroundColor3           = Color3.new(1, 1, 1)
-	shimmer.BackgroundTransparency     = 0.82
-	shimmer.BorderSizePixel            = 0
-	shimmer.ZIndex                     = 8
-	shimmer.ClipsDescendants           = false
-	shimmer.Parent                     = bg
-	Instance.new("UICorner", shimmer).CornerRadius = TAG_CORNER
-
-	local shimGrad = Instance.new("UIGradient")
-	shimGrad.Transparency = NumberSequence.new({
-		NumberSequenceKeypoint.new(0,    1),
-		NumberSequenceKeypoint.new(0.45, 0.6),
-		NumberSequenceKeypoint.new(0.5,  0.3),
-		NumberSequenceKeypoint.new(0.55, 0.6),
-		NumberSequenceKeypoint.new(1,    1),
-	})
-	shimGrad.Rotation = 15
-	shimGrad.Parent   = shimmer
-	
-	local logoSizeMult = customData and customData.logoSizeMultiplier or CONFIG.LogoSizeMultiplier
-	local logoPadVal   = customData and customData.logoPadding or CONFIG.LogoPadding
-	local innerScale   = customData and customData.logoInnerScale or CONFIG.LogoInnerScale
-	local innerOffset  = (1 - innerScale) / 2
-	
-	local IMG_W       = math.floor(tagHeight * logoSizeMult)
-	local IMG_PAD     = logoPadVal
+	-- Logo
+	local IMG_W = math.floor(tagHeight * (CONFIG.LogoSizeMultiplier or 0.8))
+	local IMG_PAD = CONFIG.LogoPadding or 6
 	local TEXT_OFFSET = IMG_PAD + IMG_W + 7
 
 	local logoHolder = Instance.new("Frame")
-	logoHolder.Name               = "LogoHolder"
-	logoHolder.Parent             = bg
-	logoHolder.Size               = UDim2.new(0, IMG_W, 0, IMG_W)
-	logoHolder.Position           = UDim2.new(0, IMG_PAD, 0.5, -IMG_W/2)
-	logoHolder.BackgroundColor3   = Color3.fromRGB(25, 20, 35)
+	logoHolder.Parent = bg
+	logoHolder.Size = UDim2.new(0, IMG_W, 0, IMG_W)
+	logoHolder.Position = UDim2.new(0, IMG_PAD, 0.5, -IMG_W/2)
 	logoHolder.BackgroundTransparency = 1
-	logoHolder.BorderSizePixel    = 0
-	logoHolder.ZIndex             = 4
-	logoHolder.ClipsDescendants   = true
+	logoHolder.ZIndex = 4
+	logoHolder.ClipsDescendants = true
 	Instance.new("UICorner", logoHolder).CornerRadius = UDim.new(1, 0)
 
 	local logoImg = Instance.new("ImageLabel")
-	logoImg.Name                 = "LogoImage"
-	logoImg.Parent               = logoHolder
-	logoImg.Size                 = UDim2.new(innerScale, 0, innerScale, 0)
-	logoImg.Position             = UDim2.new(innerOffset, 0, innerOffset, 0)
+	logoImg.Parent = logoHolder
+	logoImg.Size = UDim2.new(1, 0, 1, 0)
 	logoImg.BackgroundTransparency = 1
-	logoImg.Image                = loadImage((customData and customData.logoAsset) or LOGO_FILE, (customData and customData.logoURL) or LOGO_URL)
-	logoImg.ScaleType            = Enum.ScaleType.Crop
-	logoImg.ZIndex               = 5
+	logoImg.Image = loadImage(
+		(customData and customData.logoAsset) or LOGO_FILE,
+		(customData and customData.logoURL) or LOGO_URL
+	)
+	logoImg.ScaleType = Enum.ScaleType.Crop
+	logoImg.ZIndex = 5
 	Instance.new("UICorner", logoImg).CornerRadius = UDim.new(1, 0)
 
+	-- Rank Text
 	local kzk = Instance.new("TextLabel")
-	kzk.Name                 = "DisplayName"
-	kzk.Parent               = bg
-	kzk.Size                 = UDim2.new(1, -(TEXT_OFFSET + 8), 0, math.floor(tagHeight * 0.38))
-	kzk.Position             = UDim2.new(0, TEXT_OFFSET, 0, math.floor(tagHeight * 0.15))
+	kzk.Name = "DisplayName"
+	kzk.Parent = bg
+	kzk.Size = UDim2.new(1, -(TEXT_OFFSET + 8), 0, math.floor(tagHeight * 0.38))
+	kzk.Position = UDim2.new(0, TEXT_OFFSET, 0, math.floor(tagHeight * 0.15))
 	kzk.BackgroundTransparency = 1
-	kzk.Text                 = displayName
-	kzk.TextColor3           = Color3.fromRGB(255, 255, 255)
-	kzk.TextScaled           = true
-	kzk.TextXAlignment       = Enum.TextXAlignment.Left
-	kzk.Font                 = Enum.Font.LuckiestGuy
+	kzk.Text = displayName
+	kzk.TextColor3 = Color3.fromRGB(255, 255, 255)
+	kzk.TextScaled = true
+	kzk.TextXAlignment = Enum.TextXAlignment.Left
+	kzk.Font = Enum.Font.LuckiestGuy
 	kzk.TextStrokeTransparency = 0.5
-	kzk.TextStrokeColor3     = Color3.fromRGB(0, 0, 0)
-	kzk.ZIndex               = 5
+	kzk.TextStrokeColor3 = Color3.fromRGB(0, 0, 0)
+	kzk.ZIndex = 5
 
-	local kzkConstraint = Instance.new("UITextSizeConstraint")
-	kzkConstraint.MaxTextSize = math.floor(tagHeight * 0.32)
-	kzkConstraint.Parent      = kzk
-
-	local kzkGrad = Instance.new("UIGradient")
-	kzkGrad.Color    = ColorSequence.new(tagColor)
-	kzkGrad.Rotation = 0
-	kzkGrad.Parent   = kzk
-
-	local cursorLabel = Instance.new("TextLabel")
-	cursorLabel.Name                 = "TypingCursor"
-	cursorLabel.Parent               = bg
-	cursorLabel.Size                 = UDim2.new(0, 8, 0, 16)
-	cursorLabel.Position             = UDim2.new(0, TEXT_OFFSET, 0, 10)
-	cursorLabel.BackgroundTransparency = 1
-	cursorLabel.Text                 = ""
-	cursorLabel.TextColor3           = Color3.fromRGB(255, 255, 255)
-	cursorLabel.TextScaled           = true
-	cursorLabel.TextXAlignment       = Enum.TextXAlignment.Left
-	cursorLabel.Font                 = Enum.Font.LuckiestGuy
-	cursorLabel.ZIndex               = 5
-	cursorLabel.Visible              = false
-
+	-- Username
 	local dname = Instance.new("TextLabel")
-	dname.Name               = "Username"
-	dname.Parent             = bg
-	dname.Size               = UDim2.new(1, -(TEXT_OFFSET + 8), 0, math.floor(tagHeight * 0.26))
-	dname.Position           = UDim2.new(0, TEXT_OFFSET, 0.55, 0)
+	dname.Name = "Username"
+	dname.Parent = bg
+	dname.Size = UDim2.new(1, -(TEXT_OFFSET + 8), 0, math.floor(tagHeight * 0.26))
+	dname.Position = UDim2.new(0, TEXT_OFFSET, 0.55, 0)
 	dname.BackgroundTransparency = 1
-	dname.Text               = "@" .. plr.Name
-	dname.TextColor3         = Color3.fromRGB(255, 255, 255)
-	dname.TextScaled         = true
-	dname.TextXAlignment     = Enum.TextXAlignment.Left
-	dname.Font               = Enum.Font.Gotham
-	dname.TextStrokeTransparency = 0.85
-	dname.ZIndex             = 5
-
-	local dnameGrad = Instance.new("UIGradient")
-	dnameGrad.Name   = "UserGrad"
-	dnameGrad.Color  = ColorSequence.new(finalColors[1], finalColors[2] or finalColors[1])
-	dnameGrad.Rotation = 0
-	dnameGrad.Parent = dname
-
-	local dnameConstraint = Instance.new("UITextSizeConstraint")
-	dnameConstraint.MaxTextSize = math.floor(tagHeight * 0.22)
-	dnameConstraint.Parent      = dname
-
-	local waveCleanup = nil
+	dname.Text = "@" .. plr.Name
+	dname.TextColor3 = Color3.fromRGB(220, 220, 220)
+	dname.TextScaled = true
+	dname.TextXAlignment = Enum.TextXAlignment.Left
+	dname.Font = Enum.Font.Gotham
+	dname.TextStrokeTransparency = 0.8
+	dname.ZIndex = 5
 
 	if resolvedRankEffect == "typing" then
-		cursorLabel.Visible = false
 		startTypingEffect(kzk, displayName)
-	elseif resolvedRankEffect == "glitch" then
-		startGlitchEffect(kzk, displayName)
-	elseif resolvedRankEffect == "wave" then
-		kzk.Visible = false
-		cursorLabel.Visible = false
-		waveCleanup = startWaveEffect(
-			bg,
-			displayName,
-			UDim2.new(0, TEXT_OFFSET, 0, 8),
-			Color3.fromRGB(255, 255, 255),
-			Enum.Font.GothamBold
-		)
 	end
 
-	task.spawn(function()
-		while bb and bb.Parent do
-			for i = 0, 1, 0.1 do
-				if not stroke or not stroke.Parent then break end
-				stroke.Transparency = 0.3 + (i * 0.3)
-				task.wait(0.03)
-			end
-			for i = 1, 0, -0.1 do
-				if not stroke or not stroke.Parent then break end
-				stroke.Transparency = 0.3 + (i * 0.3)
-				task.wait(0.03)
-			end
-			task.wait(0.2)
-		end
-	end)
-
-	local pFrm = Instance.new("Frame")
-	pFrm.Parent               = bg
-	pFrm.Size                 = UDim2.new(1, 0, 1, 0)
-	pFrm.BackgroundTransparency = 1
-	pFrm.ClipsDescendants     = true
-	pFrm.ZIndex               = 3
-	Instance.new("UICorner", pFrm).CornerRadius = TAG_CORNER
-	for i = 1, 18 do
-		local dot = Instance.new("Frame")
-		dot.Parent              = pFrm
-		local sz                = math.random(1, 3)
-		dot.Size                = UDim2.new(0, sz, 0, sz)
-		dot.Position            = UDim2.new(math.random() * 0.95, 0, math.random() * 0.95, 0)
-		dot.BackgroundColor3    = finalColors[math.random(1, #finalColors)]
-		dot.BackgroundTransparency = math.random(60, 90) / 100
-		dot.ZIndex              = 3
-		Instance.new("UICorner", dot).CornerRadius = UDim.new(1, 0)
-	end
-
-	task.spawn(function()
-		while bb and bb.Parent do
-			for _, dot in pairs(pFrm:GetChildren()) do
-				if dot:IsA("Frame") then
-					local pos  = dot.Position
-					local yVal = pos.Y.Scale - 0.008
-					if yVal < -0.1 then yVal = 1.1 end
-					dot.Position           = UDim2.new(pos.X.Scale, 0, yVal, 0)
-					dot.BackgroundTransparency = 0.3 + math.random(0, 50) / 100
-				end
-			end
-			task.wait(0.05)
-		end
-	end)
-
-	local tweenCfg = TweenInfo.new(0.12, Enum.EasingStyle.Quad, Enum.EasingDirection.InOut)
-	local isZoomed = false
-
+	-- Float Animation
 	local t0 = tick()
 	local connection
 	connection = runSvc.Heartbeat:Connect(function()
 		if not bb or not bb.Parent then
 			connection:Disconnect()
-			if waveCleanup then waveCleanup() end
 			return
 		end
 
-		if not hd or not hd.Parent or bb.Adornee ~= hd then
-			local newChar = plr.Character
-			local newHead = newChar and newChar:FindFirstChild("Head")
+		if not hd or not hd.Parent then
+			local newHead = plr.Character and plr.Character:FindFirstChild("Head")
 			if newHead then
 				hd = newHead
 				bb.Adornee = newHead
@@ -804,226 +541,41 @@ local function buildTag(plr)
 		end
 
 		local t = tick() - t0
-		local colors = getColors()
-
-		if CONFIG.ShimmerEnabled then
-			local sweepPos = (t * 0.45) % 1.7 - 0.35
-			shimmer.Position = UDim2.new(sweepPos - 0.35, 0, 0, 0)
-		end
-
-		if CONFIG.PulseEnabled then
-			local pulse = 0.3 + 0.15 * math.sin(t * 2.2)
-			stroke.Transparency = pulse
-		end
-
-		strokeGrad.Rotation = 0
-		strokeGrad.Color = makeColorSequence(colors)
-
-		if not CONFIG.RainbowRankEnabled or plr ~= lp then
-			kzk.TextColor3 = Color3.fromRGB(255, 255, 255)
-			local c1 = colors[1]:Lerp(Color3.new(1,1,1), 0.3)
-			local c2 = (colors[2] or colors[1]):Lerp(Color3.new(1,1,1), 0.3)
-			kzkGrad.Color    = makeColorSequence({c1, c2})
-			kzkGrad.Rotation = 0
-			local dgr = dname:FindFirstChild("UserGrad")
-			if dgr then dgr.Color = makeColorSequence({c1, c2}) end
-		else
-			kzk.TextColor3 = cyclicLerp(colors, (t * 0.5) % 1)
-			kzkGrad.Color = makeColorSequence({
-				cyclicLerp(colors, (t * 0.5)       % 1),
-				cyclicLerp(colors, (t * 0.5 + 0.5) % 1),
-			})
-			kzkGrad.Rotation = (t * 50) % 360
-		end
-
-		local floatY = math.sin(t * CONFIG.FloatSpeed) * CONFIG.FloatAmplitude
+		local floatY = math.sin(t * (CONFIG.FloatSpeed or 1.4)) * (CONFIG.FloatAmplitude or 0.08)
 		bb.StudsOffset = currentTagOff + Vector3.new(0, floatY, 0)
-
-		local camera = workspace.CurrentCamera
-		if camera and hd and hd.Parent then
-			local dist = (camera.CFrame.Position - hd.Position).Magnitude
-			if dist > ZOOMOUT_DISTANCE and not isZoomed then
-				isZoomed = true
-				tweenSvc:Create(bb, tweenCfg, {Size = ZOOMOUT_SIZE}):Play()
-				tweenSvc:Create(logoHolder, tweenCfg, {
-					Position = UDim2.new(0.5, -ZOOMOUT_SIZE.Y.Offset/2, 0.5, -ZOOMOUT_SIZE.Y.Offset/2),
-					Size     = UDim2.new(0, ZOOMOUT_SIZE.Y.Offset, 0, ZOOMOUT_SIZE.Y.Offset),
-				}):Play()
-
-				kzk.Visible         = false
-				dname.Visible       = false
-				cursorLabel.Visible = false
-				pFrm.Visible        = false
-			elseif dist <= ZOOMOUT_DISTANCE and isZoomed then
-				isZoomed = false
-				tweenSvc:Create(bb, tweenCfg, {Size = currentTagSize}):Play()
-				tweenSvc:Create(logoHolder, tweenCfg, {
-					Position = UDim2.new(0, IMG_PAD, 0.5, -IMG_W/2),
-					Size     = UDim2.new(0, IMG_W, 0, IMG_W),
-				}):Play()
-				kzk.Visible         = (resolvedRankEffect ~= "wave")
-				dname.Visible       = true
-				cursorLabel.Visible = false
-				pFrm.Visible        = true
-			end
-		end
-
-		for _, p in pairs(plrs:GetPlayers()) do
-			local c = p.Character
-			local h = c and c:FindFirstChild("Humanoid")
-			if h then
-				h.DisplayDistanceType = Enum.HumanoidDisplayDistanceType.None
-				h.NameDisplayDistance = 0
-				h.HealthDisplayDistance = 0
-			end
-		end
 	end)
 end
 
-local function rebuildTag(plr)
-	taggedPlrs[plr.UserId] = nil
-	task.wait(0.3)
-	buildTag(plr)
-end
+-- ===================== START =====================
+registerSelf()
+refreshActiveUsers()
 
---------------------------------------------------------------------------------
--- EVENT CONNECTIONS
---------------------------------------------------------------------------------
-for _, plr in pairs(plrs:GetPlayers()) do
-	plr.CharacterAdded:Connect(function(char)
-		local hum = char:WaitForChild("Humanoid", 5)
-		if hum then
-			hum.DisplayDistanceType = Enum.HumanoidDisplayDistanceType.None
-			hum.NameDisplayDistance = 0
-			hum.HealthDisplayDistance = 0
-		end
-		char:WaitForChild("Head", 5)
-		rebuildTag(plr)
-	end)
-end
-
-local function setupLocalCharacter(char)
-	local hum = char:WaitForChild("Humanoid", 5)
-	if hum then
-		hum.DisplayDistanceType = Enum.HumanoidDisplayDistanceType.None
-		hum.NameDisplayDistance = 0
-		hum.HealthDisplayDistance = 0
+task.spawn(function()
+	while true do
+		task.wait(60)
+		refreshActiveUsers()
 	end
-	char:WaitForChild("Head", 5)
-	
-	local pg = lp:WaitForChild("PlayerGui")
-	if pg then
-		for _, obj in pairs(pg:GetChildren()) do
-			if string.find(obj.Name, "NEMESISTag_") then
-				obj:Destroy()
-			end
-		end
-	end
-	
-	table.clear(taggedPlrs)
-	mutualPlrs[lp.UserId] = true
-	
-	buildTag(lp)
-	
-	task.wait(1)
-	local channels = txtChat:FindFirstChild("TextChannels")
-	local general  = channels and channels:FindFirstChild("RBXGeneral")
-	if general then
-		general:SendAsync("↑")
-	end
-	
-	for userId, _ in pairs(mutualPlrs) do
-		local p = plrs:GetPlayerByUserId(userId)
-		if p then rebuildTag(p) end
-	end
-end
-
-lp.CharacterAdded:Connect(setupLocalCharacter)
-
-lp.CharacterAppearanceLoaded:Connect(function(char)
-	task.wait(0.5)
-	rebuildTag(lp)
 end)
 
-plrs.PlayerAdded:Connect(function(plr)
+local function onCharacter(plr)
 	plr.CharacterAdded:Connect(function(char)
-		local hum = char:WaitForChild("Humanoid", 5)
-		if hum then
-			hum.DisplayDistanceType = Enum.HumanoidDisplayDistanceType.None
-			hum.NameDisplayDistance = 0
-			hum.HealthDisplayDistance = 0
-		end
 		char:WaitForChild("Head", 5)
-		rebuildTag(plr)
-	end)
-end)
-
-local hasInitialized = false
-
-local function handleMessage(msg, ch)
-	if not msg or not msg.Text then return end
-	local text = msg.Text
-	local src  = msg.TextSource
-	if not src then return end
-	local sender = plrs:GetPlayerByUserId(src.UserId)
-	if not sender or sender == lp then return end
-
-	local isLoadSignal = string.find(text, "↑")
-	local isAckSignal  = string.find(text, "↓")
-
-	if isLoadSignal then
-		local replyKey = tostring(sender.UserId)
-		if respondedPlrs[replyKey] or mutualPlrs[sender.UserId] then return end
-		respondedPlrs[replyKey] = true
-		
-		mutualPlrs[sender.UserId] = true
 		task.wait(0.5)
-		ch:SendAsync("↓")
-		
-		local function applyTarget()
-			if sender.Character and sender.Character:FindFirstChild("Head") and sender.Character:FindFirstChild("HumanoidRootPart") then
-				buildTag(sender)
-			else
-				task.delay(1, applyTarget)
-			end
+		if registeredPlrs[plr.UserId] then
+			buildTag(plr)
 		end
-		applyTarget()
-		ch:SendAsync("↑")
-	elseif isAckSignal then
-		mutualPlrs[sender.UserId] = true
-		
-		local function applyTarget()
-			if sender.Character and sender.Character:FindFirstChild("Head") and sender.Character:FindFirstChild("HumanoidRootPart") then
-				buildTag(sender)
-			else
-				task.delay(1, applyTarget)
-			end
-		end
-		applyTarget()
-	end
+	end)
 end
 
-local channels = txtChat:WaitForChild("TextChannels", 5)
-local general  = channels and channels:FindFirstChild("RBXGeneral")
-
-if general then
-	general.MessageReceived:Connect(function(msg) handleMessage(msg, general) end)
-	task.wait(3)
-	if not hasInitialized and next(mutualPlrs) == nil then
-		hasInitialized = true
-		general:SendAsync("↑")
-	end
+for _, plr in pairs(plrs:GetPlayers()) do
+	onCharacter(plr)
 end
-
-mutualPlrs[lp.UserId] = true
-task.wait(1)
-if lp.Character then buildTag(lp)
-else lp.CharacterAdded:Wait(); task.wait(0.5); buildTag(lp) end
+plrs.PlayerAdded:Connect(onCharacter)
 
 plrs.PlayerRemoving:Connect(function(plr)
-	taggedPlrs[plr.UserId]              = nil
-	respondedPlrs[tostring(plr.UserId)] = nil
-	mutualPlrs[plr.UserId]              = nil
+	taggedPlrs[plr.UserId] = nil
+	registeredPlrs[plr.UserId] = nil
+
 	local pg = lp:FindFirstChild("PlayerGui")
 	if pg then
 		local tag = pg:FindFirstChild("NEMESISTag_" .. plr.UserId)
@@ -1031,53 +583,8 @@ plrs.PlayerRemoving:Connect(function(plr)
 	end
 end)
 
-game:BindToClose(function()
-	local pg = lp:FindFirstChild("PlayerGui")
-	if pg then
-		for _, obj in pairs(pg:GetChildren()) do
-			if string.find(obj.Name, "NEMESISTag_") then obj:Destroy() end
-		end
-	end
-end)
-
-return {
-	SetRankText = function(text)
-		CONFIG.RankText = text
-		local pg = lp:FindFirstChild("PlayerGui")
-		if pg then
-			local bb  = pg:FindFirstChild("NEMESISTag_" .. lp.UserId)
-			local lbl = bb and bb:FindFirstChild("DisplayName", true)
-			if lbl then lbl.Text = text end
-		end
-	end,
-
-	SetDisplayName = function(name)
-		CONFIG.DisplayName = name
-		local pg = lp:FindFirstChild("PlayerGui")
-		if pg then
-			local bb  = pg:FindFirstChild("NEMESISTag_" .. lp.UserId)
-			local lbl = bb and bb:FindFirstChild("Username", true)
-			if lbl then lbl.Text = name end
-		end
-	end,
-
-	SetTheme = function(themeName)
-		if THEMES[themeName] then
-			CONFIG.Theme = themeName
-			rebuildTag(lp)
-		end
-	end,
-
-	SetRainbow = function(enabled)
-		CONFIG.RainbowRankEnabled = enabled
-	end,
-
-	SetRankEffect = function(effect)
-		CONFIG.RankEffect = effect
-		rebuildTag(lp)
-	end,
-
-	Rebuild = function()
-		rebuildTag(lp)
-	end,
-}
+registeredPlrs[lp.UserId] = true
+task.wait(1)
+if lp.Character then
+	buildTag(lp)
+end
