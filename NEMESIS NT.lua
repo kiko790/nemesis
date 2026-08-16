@@ -121,8 +121,8 @@ local ROLE_PRESETS = {
 		staticBgURL  = "https://i.ibb.co/93CPw1vv/image.png",
 	},
 	["PAPA CHRON"] = {
-		gradientA  = Color3.fromRGB(255, 255, 255),
-		gradientB  = Color3.fromRGB(255, 255, 255),
+        gradientA  = Color3.fromRGB(0, 0, 0),
+        gradientB  = Color3.fromRGB(255, 255, 255),
 		rankEffect = "typing",
 		tagWidth   = 180,
 		tagHeight  = 50,
@@ -139,6 +139,26 @@ local ROLE_PRESETS = {
 		staticBgFile = "kikostag.png",
 		staticBgURL  = "https://i.ibb.co/93CPw1vv/image.png",
 	},
+		["CHRON OWNS ME"] = {
+        gradientA  = Color3.fromRGB(0, 0, 0),
+        gradientB  = Color3.fromRGB(255, 255, 255),
+		rankEffect = "typing",
+		tagWidth   = 180,
+		tagHeight  = 50,
+		tagOffsetY = 1.7,
+		logoAsset  = "",
+		logoURL    = "",
+		useAnimatedBg = true,
+		spriteFile   = "mrmtagv2.png",
+		spriteURL    = "https://i.ibb.co/BKjn9FCV/image.png",  
+		frameColumns = 5,   
+		frameRows    = 4,    
+		totalFrames  = 20,   
+		framesPerSec = 5,   
+		spriteFile   = "chronsgirltag.png",
+		spriteURL    = "https://i.ibb.co/jPP2G95m/chronsgirltag.png",  
+	},
+}
 }
 
 local customPlayers = {}
