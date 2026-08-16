@@ -8,7 +8,7 @@ local runSvc = game:GetService("RunService")
 local soundSvc = game:GetService("SoundService")
 local lp = plrs.LocalPlayer
 
-local API_URL = "https://nemnem.kenzielimonn.workers.dev/"
+local API_URL = "https://backend.kenzielimonn.workers.dev/"
 local API_SECRET = "Pondelok5"
 
 local JSON_URL = "https://raw.githubusercontent.com/ykknzo-hub/commandlist/refs/heads/main/nemesis%20cmd/tags.json"
