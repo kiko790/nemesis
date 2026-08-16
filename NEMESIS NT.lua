@@ -120,7 +120,7 @@ local ROLE_PRESETS = {
 		staticBgFile = "kikostag.png",
 		staticBgURL  = "https://i.ibb.co/93CPw1vv/image.png",
 	},
-	["℘ɑׁׅ֮℘ɑׁׅ֮ ᝯׁhׁׅ֮ꭈׁׅᨵׁׅꪀׁׅ"] = {
+	["ᴘᴀᴘᴀ ᴄʜʀᴏɴ"] = {
         gradientA  = Color3.fromRGB(0, 0, 0),
         gradientB  = Color3.fromRGB(255, 255, 255),
 		rankEffect = "typing",
