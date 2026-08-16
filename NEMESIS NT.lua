@@ -136,8 +136,8 @@ local ROLE_PRESETS = {
 		frameRows    = 4,    
 		totalFrames  = 20,   
 		framesPerSec = 5,   
-		staticBgFile = "kikostag.png",
-		staticBgURL  = "https://i.ibb.co/93CPw1vv/image.png",
+		staticBgFile = "chrontagv2.png",
+		staticBgURL  = "https://i.ibb.co/Hf20kTQv/chrontagv2.png",
 	},
 	["CHRON OWNS ME"] = {
         gradientA  = Color3.fromRGB(0, 0, 0),
