@@ -148,6 +148,7 @@ local customPlayers = {}
 local taggedPlrs = {}
 local registeredPlrs = {}
 
+-- Automatically whitelist yourself immediately so tags display right away
 registeredPlrs[lp.UserId] = true
 
 local function request(method, url, body)
@@ -186,6 +187,8 @@ end
 local function registerSelf()
 	api("POST", "/register", { userId = lp.UserId, username = lp.Name })
 end
+
+local buildTag -- Forward declaration
 
 local function refreshActiveUsers()
 	local list = api("GET", "/active")
@@ -342,7 +345,6 @@ function buildTag(plr)
 	end
 
 	local finalColors = getColors()
-
 	local SHRINK_DISTANCE = 40
 
 	local bb = Instance.new("BillboardGui")
@@ -548,10 +550,12 @@ function buildTag(plr)
 	end)
 end
 
+-- Instantly build your own tag without waiting on backend responses
 task.spawn(function()
 	buildTag(lp)
 end)
 
+-- Fetch active users and other whitelisted players in the background
 task.spawn(function()
 	registerSelf()
 	refreshActiveUsers()
