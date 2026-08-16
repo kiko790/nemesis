@@ -24,13 +24,13 @@ local THEMES = {
 	gold = { Color3.fromRGB(255, 180, 20), Color3.fromRGB(255, 255, 180) },
 	cyan = { Color3.fromRGB(90, 180, 255), Color3.fromRGB(245, 250, 255) },
 	fire = { Color3.fromRGB(255, 50, 0), Color3.fromRGB(255, 230, 50) },
-	bw = { Color3.fromRGB(40, 40, 40), Color3.fromRGB(220, 220, 220) },
+	bw = { Color3.fromRGB(255, 255, 255), Color3.fromRGB(0, 0, 0) },
 	red = { Color3.fromRGB(200, 0, 0), Color3.fromRGB(0, 0, 0) },
 }
 
 local CONFIG = {
 	RankText = "NEMESIS USER",
-	Theme = "cyan",
+	Theme = "bw",
 	ShimmerEnabled = true,
 	PulseEnabled = true,
 	RainbowRankEnabled = false,
@@ -45,8 +45,8 @@ local DEFAULT_TAG_WIDTH = 180
 local DEFAULT_TAG_HEIGHT = 50
 local DEFAULT_TAG_OFFSET_Y = 1.7
 local TAG_CORNER = UDim.new(0, 14)
-local LOGO_FILE = "nemesis-no-bg.png"
-local LOGO_URL = "https://i.ibb.co/8DPYtKvx/nemesis-no-bg.png"
+local LOGO_FILE = "whitelogo.png"
+local LOGO_URL = "https://i.ibb.co/SwGkMS5h/whitelogo.png"
 
 local ROLE_PRESETS = {
 	[""] = {
