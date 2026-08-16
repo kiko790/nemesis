@@ -63,25 +63,6 @@ local LOGO_FILE = "nemesis-no-bg.png"
 local LOGO_URL  = "https://i.ibb.co/8DPYtKvx/nemesis-no-bg.png"
 
 local ROLE_PRESETS = {
-	[""] = {
-		gradientA  = Color3.fromRGB(173, 216, 230),
-		gradientB  = Color3.fromRGB(173, 216, 230),
-		rankEffect = "",
-		tagWidth   = 180,
-		tagHeight  = 50,
-		tagOffsetY = 1.7,
-		logoAsset  = "",
-		logoURL    = "",
-		useAnimatedBg = true,
-		spriteFile   = "2200.png",
-		spriteURL    = "https://i.ibb.co/sd7TTYG4/ezgif-2310ab27c9df1275.png",  
-		frameColumns = 5,   
-		frameRows    = 4,    
-		totalFrames  = 20,   
-		framesPerSec = 10,   
-		staticBgFile = "kikostag.png",
-		staticBgURL  = "https://i.ibb.co/93CPw1vv/image.png",
-	},
 	["ANGEL"] = {
 		gradientA  = Color3.fromRGB(255, 255, 255),
 		gradientB  = Color3.fromRGB(0, 0, 0),
