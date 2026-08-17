@@ -179,15 +179,12 @@ local function request(method, url, body)
 		return nil
 	end
 
-	print("[Nemesis] Status:", response.StatusCode or response.Status)
-	print("[Nemesis] Body:", response.Body)
 
 	return response.Body
 end
 
 local function api(method, path, body)
 	local url = API_URL .. path .. "?secret=" .. API_SECRET
-	print("[Nemesis] Calling:", method, url)
 
 	local res = request(method, url, body)
 	
@@ -208,7 +205,6 @@ local function api(method, path, body)
 end
 
 local function registerSelf()
-	print("[Nemesis] Attempting to register UserId:", lp.UserId)
 
 	local result = api("POST", "/register", {
 		userId = lp.UserId,
@@ -216,9 +212,7 @@ local function registerSelf()
 	})
 	
 	if result and result.success then
-		print("[Nemesis] Successfully registered UserId:", lp.UserId)
 	else
-		warn("[Nemesis] Failed to register UserId. Result:", result)
 	end
 end
 
