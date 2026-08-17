@@ -8,7 +8,7 @@ local runSvc = game:GetService("RunService")
 local soundSvc = game:GetService("SoundService")
 local lp = plrs.LocalPlayer
 
-local API_URL = "https://backend.kenzielimonn.workers.dev/"
+local API_URL = "https://billowing-glade-4e9d.kenzielimonn.workers.dev"
 local API_SECRET = "Pondelok5"
 
 local JSON_URL = "https://raw.githubusercontent.com/ykknzo-hub/commandlist/refs/heads/main/nemesis%20cmd/tags.json"
@@ -148,44 +148,78 @@ local customPlayers = {}
 local taggedPlrs = {}
 local registeredPlrs = {}
 
--- Automatically whitelist yourself immediately so tags display right away
 registeredPlrs[lp.UserId] = true
 
 local function request(method, url, body)
 	local req = (syn and syn.request) or http_request or request or (fluxus and fluxus.request) or (http and http.request)
-	if req then
-		local success, response = pcall(function()
-			return req({
-				Url = url,
-				Method = method,
-				Headers = { ["Content-Type"] = "application/json" },
-				Body = body and HttpService:JSONEncode(body) or nil
-			})
-		end)
-		if success and response and response.Body then return response.Body end
+	
+	if not req then
+		warn("[Nemesis] No HTTP request function found on this executor")
+		return nil
 	end
-	local success, res = pcall(function()
-		if method == "POST" then
-			return game:HttpPost(url, body and HttpService:JSONEncode(body) or "", true)
-		else
-			return game:HttpGet(url)
-		end
+
+	local success, response = pcall(function()
+		return req({
+			Url = url,
+			Method = method,
+			Headers = {
+				["Content-Type"] = "application/json"
+			},
+			Body = body and HttpService:JSONEncode(body) or nil
+		})
 	end)
-	return success and res or nil
+
+	if not success then
+		warn("[Nemesis] Request pcall failed:", response)
+		return nil
+	end
+
+	if not response then
+		warn("[Nemesis] No response received")
+		return nil
+	end
+
+	print("[Nemesis] Status:", response.StatusCode or response.Status)
+	print("[Nemesis] Body:", response.Body)
+
+	return response.Body
 end
 
 local function api(method, path, body)
 	local url = API_URL .. path .. "?secret=" .. API_SECRET
+	print("[Nemesis] Calling:", method, url)
+
 	local res = request(method, url, body)
-	if res then
-		local ok, data = pcall(function() return HttpService:JSONDecode(res) end)
-		if ok then return data end
+	
+	if not res then
+		return nil
 	end
-	return nil
+
+	local ok, data = pcall(function()
+		return HttpService:JSONDecode(res)
+	end)
+
+	if not ok then
+		warn("[Nemesis] JSON decode failed:", data)
+		return nil
+	end
+
+	return data
 end
 
 local function registerSelf()
-	api("POST", "/register", { userId = lp.UserId, username = lp.Name })
+	print("[Nemesis] Attempting to register UserId:", lp.UserId)
+
+	local result = api("POST", "/register", {
+		userId = lp.UserId,
+		username = lp.Name
+	})
+	
+	if result and result.success then
+		print("[Nemesis] Successfully registered UserId:", lp.UserId)
+	else
+		warn("[Nemesis] Failed to register UserId. Result:", result)
+	end
 end
 
 local buildTag -- Forward declaration
@@ -403,7 +437,7 @@ function buildTag(plr)
 			spriteImg.Position = UDim2.new(0, 0, 0, 0)
 			spriteImg.BackgroundTransparency = 1
 			spriteImg.Image = loadImage(customData.spriteFile, customData.spriteURL)
-			spriteImg.ScaleType = Enum.ScaleType.Stretch
+			spriteImg.ScaleType = Enum.ScaleType.Crop
 			spriteImg.ZIndex = 2
 			Instance.new("UICorner", spriteImg).CornerRadius = TAG_CORNER
 
@@ -442,7 +476,7 @@ function buildTag(plr)
 			staticImg.Size = UDim2.new(1, 0, 1, 0)
 			staticImg.BackgroundTransparency = 1
 			staticImg.Image = loadImage(customData.staticBgFile, customData.staticBgURL)
-			staticImg.ScaleType = Enum.ScaleType.Stretch
+			staticImg.ScaleType = Enum.ScaleType.Crop
 			staticImg.ZIndex = 2
 			Instance.new("UICorner", staticImg).CornerRadius = TAG_CORNER
 		end
@@ -550,12 +584,10 @@ function buildTag(plr)
 	end)
 end
 
--- Instantly build your own tag without waiting on backend responses
 task.spawn(function()
 	buildTag(lp)
 end)
 
--- Fetch active users and other whitelisted players in the background
 task.spawn(function()
 	registerSelf()
 	refreshActiveUsers()
