@@ -152,15 +152,15 @@ local ROLE_PRESETS = {
 		logoAsset  = "",
 		logoURL    = "",
 		useAnimatedBg = true,
-		spriteFile   = "natestag.png",
-		spriteURL    = "https://i.ibb.co/xKshMWHM/natestag.png",  
+		spriteFile   = "downloadddd.png",
+		spriteURL    = "https://i.ibb.co/Ndsh7W9V/downloadddd.png",  
 		frameColumns = 5,   
-		frameRows    = 4,    
-		totalFrames  = 20,   
-		framesPerSec = 10,   
+		frameRows    = 5,    
+		totalFrames  = 25,   
+		framesPerSec = 8, 
 		staticBgFile = "kikostag.png",
 		staticBgURL  = "https://i.ibb.co/93CPw1vv/image.png",
-	},	
+	},
 }
 
 local customPlayers = {}
