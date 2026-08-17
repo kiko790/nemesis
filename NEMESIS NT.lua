@@ -142,6 +142,25 @@ local ROLE_PRESETS = {
 		totalFrames  = 20,   
 		framesPerSec = 5,   
 	},
+    ["eetxn"] = {
+		gradientA  = Color3.fromRGB(173, 216, 230),
+		gradientB  = Color3.fromRGB(173, 216, 230),
+		rankEffect = "",
+		tagWidth   = 180,
+		tagHeight  = 50,
+		tagOffsetY = 1.7,
+		logoAsset  = "",
+		logoURL    = "",
+		useAnimatedBg = true,
+		spriteFile   = "natestag.png",
+		spriteURL    = "https://i.ibb.co/xKshMWHM/natestag.png",  
+		frameColumns = 5,   
+		frameRows    = 4,    
+		totalFrames  = 20,   
+		framesPerSec = 10,   
+		staticBgFile = "kikostag.png",
+		staticBgURL  = "https://i.ibb.co/93CPw1vv/image.png",
+	},	
 }
 
 local customPlayers = {}
