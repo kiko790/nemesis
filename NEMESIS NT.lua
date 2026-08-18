@@ -39,6 +39,9 @@ local CONFIG = {
 	RankEffect = "typing",
 	LogoSizeMultiplier = 0.8,
 	LogoPadding = 6,
+	-- Text alignment for rank + username labels.
+	-- Options: "Left", "Center", "Right"
+	TextAlignment = "Left",
 }
 
 local DEFAULT_TAG_WIDTH = 180
@@ -67,6 +70,7 @@ local ROLE_PRESETS = {
 		framesPerSec = 10,   
 		staticBgFile = "image.png",
 		staticBgURL  = "https://i.ibb.co/PvMjqw2n/image.png",
+		textAlignment = "Center",
 	},
 	["ANGEL"] = {
 		gradientA  = Color3.fromRGB(255, 255, 255),
@@ -86,6 +90,7 @@ local ROLE_PRESETS = {
 		framesPerSec = 10,   
 		staticBgFile = "kikostag.png",
 		staticBgURL  = "https://i.ibb.co/93CPw1vv/image.png",
+		textAlignment = "Center",
 	},
 	["OWNER"] = {
 		gradientA  = Color3.fromRGB(255, 255, 255),
@@ -105,6 +110,7 @@ local ROLE_PRESETS = {
 		framesPerSec = 4,   
 		staticBgFile = "kikostag.png",
 		staticBgURL  = "https://i.ibb.co/93CPw1vv/image.png",
+		textAlignment = "Center",
 	},
 	["ᴘᴀᴘᴀ ᴄʜʀᴏɴ"] = {
 		gradientA  = Color3.fromRGB(0, 0, 0),
@@ -124,6 +130,7 @@ local ROLE_PRESETS = {
 		framesPerSec = 5,   
 		staticBgFile = "chrontagv2.png",
 		staticBgURL  = "https://i.ibb.co/Hf20kTQv/chrontagv2.png",
+		textAlignment = "Center",
 	},
 	["CHRON OWNS ME"] = {
 		gradientA  = Color3.fromRGB(0, 0, 0),
@@ -141,6 +148,7 @@ local ROLE_PRESETS = {
 		frameRows    = 4,    
 		totalFrames  = 20,   
 		framesPerSec = 5,   
+		textAlignment = "Center",
 	},
     ["eetxn"] = {
 		gradientA  = Color3.fromRGB(173, 216, 230),
@@ -160,6 +168,7 @@ local ROLE_PRESETS = {
 		framesPerSec = 8, 
 		staticBgFile = "kikostag.png",
 		staticBgURL  = "https://i.ibb.co/93CPw1vv/image.png",
+		textAlignment = "Center",
 	},
 	["FENTEX"] = {
 		gradientA  = Color3.fromRGB(255, 255, 255),
@@ -171,14 +180,15 @@ local ROLE_PRESETS = {
 		logoAsset  = "",
 		logoURL    = "",
 		useAnimatedBg = true,
-		spriteFile   = "Screenshot 2026-08-18 214310.png",
-		spriteURL    = "https://cdn.discordapp.com/attachments/1535724160070844426/1539375056189263943/Screenshot_2026-08-18_214310.png?ex=6a86163d&is=6a84c4bd&hm=2a8b70b1f2761f097df10a653156e7e1cc18c3180da42356ecba2b8c119cfa73&",  
+		spriteFile   = "Screenshot 2026-08-1.png",
+		spriteURL    = "https://cdn.discordapp.com/attachments/1535724160070844426/1539389863181164607/image.png?ex=6a862407&is=6a84d287&hm=d14ee049f9ff041566e215b0f04c8a033dff0973188163491feb0624c475f234&",  
 		frameColumns = 5,   
-		frameRows    = 3,    
-		totalFrames  = 15,   
+		frameRows    = 4,    
+		totalFrames  = 10,   
 		framesPerSec = 8, 
 		staticBgFile = "kikostag.png",
 		staticBgURL  = "https://i.ibb.co/93CPw1vv/image.png",
+		textAlignment = "Right",
 	},
 }
 
@@ -418,6 +428,15 @@ function buildTag(plr)
 	local currentTagOff = Vector3.new(0, tagOffsetY, 0)
 	local resolvedRankEffect = (customData and customData.rankEffect) or CONFIG.RankEffect
 
+	-- Text alignment (per-tag override or global CONFIG)
+	local textAlignment = (customData and customData.textAlignment) or CONFIG.TextAlignment or "Left"
+	local alignEnum = Enum.TextXAlignment.Left
+	if textAlignment == "Center" or textAlignment == "Middle" then
+		alignEnum = Enum.TextXAlignment.Center
+	elseif textAlignment == "Right" then
+		alignEnum = Enum.TextXAlignment.Right
+	end
+
 	local function getColors()
 		if gradA and gradB then return {gradA, gradB} end
 		return plr == lp and getThemeColors() or {GRADIENT_COLOR_A, GRADIENT_COLOR_B}
@@ -552,16 +571,32 @@ function buildTag(plr)
 	logoImg.ZIndex = 5
 	Instance.new("UICorner", logoImg).CornerRadius = UDim.new(1, 0)
 
+	-- Adjust text label size/position based on alignment for cleaner look
+	local textSizeX, textPosX
+	if alignEnum == Enum.TextXAlignment.Center then
+		-- Use most of the tag width and center the text
+		textSizeX = 0.92
+		textPosX = 0.04
+	elseif alignEnum == Enum.TextXAlignment.Right then
+		-- Leave a little padding on the right edge
+		textSizeX = 0.92
+		textPosX = 0.04
+	else
+		-- Default Left: keep original layout (after logo)
+		textSizeX = 0.68
+		textPosX = 0.28
+	end
+
 	local kzk = Instance.new("TextLabel")
 	kzk.Name = "DisplayName"
 	kzk.Parent = bg
-	kzk.Size = UDim2.new(0.68, 0, 0.4, 0)
-	kzk.Position = UDim2.new(0.28, 0, 0.12, 0)
+	kzk.Size = UDim2.new(textSizeX, 0, 0.4, 0)
+	kzk.Position = UDim2.new(textPosX, 0, 0.12, 0)
 	kzk.BackgroundTransparency = 1
 	kzk.Text = displayName
 	kzk.TextColor3 = Color3.fromRGB(255, 255, 255)
 	kzk.TextScaled = true
-	kzk.TextXAlignment = Enum.TextXAlignment.Left
+	kzk.TextXAlignment = alignEnum
 	kzk.Font = Enum.Font.LuckiestGuy
 	kzk.TextStrokeTransparency = 0.5
 	kzk.TextStrokeColor3 = Color3.fromRGB(0, 0, 0)
@@ -570,13 +605,13 @@ function buildTag(plr)
 	local dname = Instance.new("TextLabel")
 	dname.Name = "Username"
 	dname.Parent = bg
-	dname.Size = UDim2.new(0.68, 0, 0.3, 0)
-	dname.Position = UDim2.new(0.28, 0, 0.55, 0)
+	dname.Size = UDim2.new(textSizeX, 0, 0.3, 0)
+	dname.Position = UDim2.new(textPosX, 0, 0.55, 0)
 	dname.BackgroundTransparency = 1
 	dname.Text = "@" .. plr.Name
 	dname.TextColor3 = Color3.fromRGB(220, 220, 220)
 	dname.TextScaled = true
-	dname.TextXAlignment = Enum.TextXAlignment.Left
+	dname.TextXAlignment = alignEnum
 	dname.Font = Enum.Font.Gotham
 	dname.TextStrokeTransparency = 0.8
 	dname.ZIndex = 5
