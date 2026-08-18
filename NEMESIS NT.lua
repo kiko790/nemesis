@@ -615,12 +615,36 @@ end)
 
 local function onCharacter(plr)
 	plr.CharacterAdded:Connect(function(char)
-		char:WaitForChild("Head", 10)
-		task.wait(0.2)
-		if registeredPlrs[plr.UserId] then
-			buildTag(plr)
+		local head = char:WaitForChild("Head", 10)
+		if head then
+			task.wait(0.25)
+			if registeredPlrs[plr.UserId] then
+				buildTag(plr)
+			end
 		end
 	end)
+
+	-- CRITICAL FIX: destroy tag + clear flag when character is removed (death / reset)
+	plr.CharacterRemoving:Connect(function()
+		taggedPlrs[plr.UserId] = nil
+		local pg = lp:FindFirstChild("PlayerGui")
+		if pg then
+			local tag = pg:FindFirstChild("NEMESISTag_" .. plr.UserId)
+			if tag then
+				tag:Destroy()
+			end
+		end
+	end)
+
+	-- Handle players who already have a character when we connect
+	if plr.Character then
+		task.spawn(function()
+			local head = plr.Character:FindFirstChild("Head") or plr.Character:WaitForChild("Head", 5)
+			if head and registeredPlrs[plr.UserId] then
+				buildTag(plr)
+			end
+		end)
+	end
 end
 
 for _, plr in pairs(plrs:GetPlayers()) do
