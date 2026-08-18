@@ -65,8 +65,8 @@ local ROLE_PRESETS = {
 		frameRows    = 4,    
 		totalFrames  = 15,   
 		framesPerSec = 10,   
-		staticBgFile = "kikostag.png",
-		staticBgURL  = "https://i.ibb.co/93CPw1vv/image.png",
+		staticBgFile = "image.png",
+		staticBgURL  = "https://i.ibb.co/PvMjqw2n/image.png",
 	},
 	["ANGEL"] = {
 		gradientA  = Color3.fromRGB(255, 255, 255),
