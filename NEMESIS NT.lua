@@ -49,7 +49,7 @@ local LOGO_FILE = "whitelogo.png"
 local LOGO_URL = "https://i.ibb.co/SwGkMS5h/whitelogo.png"
 
 local ROLE_PRESETS = {
-	["​"] = {
+	["​FOUNDER"] = {
 		gradientA  = Color3.fromRGB(173, 216, 230),
 		gradientB  = Color3.fromRGB(173, 216, 230),
 		rankEffect = "",
