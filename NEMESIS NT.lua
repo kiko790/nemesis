@@ -44,30 +44,30 @@ local CONFIG = {
 
 local DEFAULT_TAG_WIDTH = 180
 local DEFAULT_TAG_HEIGHT = 50
-local DEFAULT_TAG_OFFSET_Y = 2.6 -- above default display name so tags overlap on top
+local DEFAULT_TAG_OFFSET_Y = 2.6 
 local TAG_CORNER = UDim.new(0, 14)
 local LOGO_FILE = "whitelogo.png"
 local LOGO_URL = "https://i.ibb.co/SwGkMS5h/whitelogo.png"
 
 local ROLE_PRESETS = {
-	[""] = {
+	["DEV"] = {
 		gradientA  = Color3.fromRGB(173, 216, 230),
 		gradientB  = Color3.fromRGB(173, 216, 230),
 		rankEffect = "",
 		tagWidth   = 180,
 		tagHeight  = 50,
 		tagOffsetY = 2.6,
-		logoAsset  = "",
-		logoURL    = "",
-		useAnimatedBg = true,
-		spriteFile   = "image.png",
-		spriteURL    = "https://i.ibb.co/PvMjqw2n/image.png",
+		logoAsset  = "1f346.webp",
+		logoURL    = "https://cdn.discordapp.com/attachments/1493961870548144131/1539416266010271834/1f346.webp?ex=6a863c9e&is=6a84eb1e&hm=302f8cd4fa3d9aaf3d831b78a3899ec75661b43c1760916f4abc7417840dd872&",
+		useAnimatedBg = false,
+		spriteFile   = "",
+		spriteURL    = "",
 		frameColumns = 5,
 		frameRows    = 4,
 		totalFrames  = 15,
 		framesPerSec = 10,
-		staticBgFile = "image.png",
-		staticBgURL  = "https://i.ibb.co/PvMjqw2n/image.png",
+		staticBgFile = "09113de3221477c87df40b5349343089.webp",
+		staticBgURL  = "https://cdn.discordapp.com/attachments/1493961870548144131/1539417072952672346/09113de3221477c87df40b5349343089.webp?ex=6a863d5f&is=6a84ebdf&hm=697c1ba3e0045032510e33b71cdbe5690104ccb4698f91cfe4ab45fcf8c87326&",
 		textAlignment = "Left",
 	},
 	["ANGEL"] = {
@@ -164,6 +164,46 @@ local ROLE_PRESETS = {
 		frameRows    = 5,
 		totalFrames  = 25,
 		framesPerSec = 8,
+		staticBgFile = "kikostag.png",
+		staticBgURL  = "https://i.ibb.co/93CPw1vv/image.png",
+		textAlignment = "Left",
+	},
+	["NEMESIS STAFF"] = {
+		gradientA  = Color3.fromRGB(255,255,255),
+		gradientB  = Color3.fromRGB(255,255,255),
+		rankEffect = "",
+		tagWidth   = 180,
+		tagHeight  = 50,
+		tagOffsetY = 2.6,
+		logoAsset  = "",
+		logoURL    = "",
+		useAnimatedBg = true,
+		spriteFile   = "stafftag.png",
+		spriteURL    = "https://cdn.discordapp.com/attachments/1535724160070844426/1539407226223992832/stafftag.png?ex=6a863433&is=6a84e2b3&hm=fcd45ddfcae10998bcced4a7b346e6ab3d8c404b8dffd605f0ccd16048b3f7aa&",
+		frameColumns = 5,
+		frameRows    = 3,
+		totalFrames  = 15,
+		framesPerSec = 4,
+		staticBgFile = "kikostag.png",
+		staticBgURL  = "https://i.ibb.co/93CPw1vv/image.png",
+		textAlignment = "Left",
+	},
+	["NEMESIS BOOSTER"] = {
+		gradientA  = Color3.fromRGB(255,255,255),
+		gradientB  = Color3.fromRGB(255,255,255),
+		rankEffect = "",
+		tagWidth   = 180,
+		tagHeight  = 50,
+		tagOffsetY = 2.6,
+		logoAsset  = "",
+		logoURL    = "",
+		useAnimatedBg = true,
+		spriteFile   = "booster_tag.png",
+		spriteURL    = "https://cdn.discordapp.com/attachments/1535724160070844426/1539415029449891941/booster_tag.png?ex=6a863b77&is=6a84e9f7&hm=9967911153de211a068d42997a9fea42647caf7fa19d827738efceaf52d9830b&",
+		frameColumns = 5,
+		frameRows    = 3,
+		totalFrames  = 15,
+		framesPerSec = 4,
 		staticBgFile = "kikostag.png",
 		staticBgURL  = "https://i.ibb.co/93CPw1vv/image.png",
 		textAlignment = "Left",
@@ -760,5 +800,3 @@ plrs.PlayerRemoving:Connect(function(plr)
 		end
 	end
 end)
-
-print("[Nemesis Tags] Loaded — display names visible, tags overlap on top")
