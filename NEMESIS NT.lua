@@ -180,6 +180,7 @@ local ROLE_PRESETS = {
         staticBgFile = "kikostag.png",
         staticBgURL  = "https://i.ibb.co/93CPw1vv/image.png",
     },
+}	
 
 local customPlayers = {}
 local taggedPlrs = {}
