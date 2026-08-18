@@ -39,14 +39,12 @@ local CONFIG = {
 	RankEffect = "typing",
 	LogoSizeMultiplier = 0.8,
 	LogoPadding = 6,
-	-- Text alignment for rank + username labels.
-	-- Options: "Left", "Center", "Right"
 	TextAlignment = "Left",
 }
 
 local DEFAULT_TAG_WIDTH = 180
 local DEFAULT_TAG_HEIGHT = 50
-local DEFAULT_TAG_OFFSET_Y = 1.7
+local DEFAULT_TAG_OFFSET_Y = 2.6 -- above default display name so tags overlap on top
 local TAG_CORNER = UDim.new(0, 14)
 local LOGO_FILE = "whitelogo.png"
 local LOGO_URL = "https://i.ibb.co/SwGkMS5h/whitelogo.png"
@@ -58,19 +56,19 @@ local ROLE_PRESETS = {
 		rankEffect = "",
 		tagWidth   = 180,
 		tagHeight  = 50,
-		tagOffsetY = 1.7,
+		tagOffsetY = 2.6,
 		logoAsset  = "",
 		logoURL    = "",
 		useAnimatedBg = true,
 		spriteFile   = "image.png",
-		spriteURL    = "https://i.ibb.co/PvMjqw2n/image.png",  
-		frameColumns = 5,   
-		frameRows    = 4,    
-		totalFrames  = 15,   
-		framesPerSec = 10,   
+		spriteURL    = "https://i.ibb.co/PvMjqw2n/image.png",
+		frameColumns = 5,
+		frameRows    = 4,
+		totalFrames  = 15,
+		framesPerSec = 10,
 		staticBgFile = "image.png",
 		staticBgURL  = "https://i.ibb.co/PvMjqw2n/image.png",
-		textAlignment = "Center",
+		textAlignment = "Left",
 	},
 	["ANGEL"] = {
 		gradientA  = Color3.fromRGB(255, 255, 255),
@@ -78,19 +76,19 @@ local ROLE_PRESETS = {
 		rankEffect = "typing",
 		tagWidth   = 180,
 		tagHeight  = 50,
-		tagOffsetY = 1.7,
+		tagOffsetY = 2.6,
 		logoAsset  = "angellogo.png",
 		logoURL    = "https://i.ibb.co/398fwh1F/angellogo.png",
 		useAnimatedBg = true,
 		spriteFile   = "angelsgif.png",
-		spriteURL    = "https://i.ibb.co/xKKQnv8W/image.png", 
-		frameColumns = 5,   
-		frameRows    = 4,    
-		totalFrames  = 17,   
-		framesPerSec = 10,   
+		spriteURL    = "https://i.ibb.co/xKKQnv8W/image.png",
+		frameColumns = 5,
+		frameRows    = 4,
+		totalFrames  = 17,
+		framesPerSec = 10,
 		staticBgFile = "kikostag.png",
 		staticBgURL  = "https://i.ibb.co/93CPw1vv/image.png",
-		textAlignment = "Center",
+		textAlignment = "Left",
 	},
 	["OWNER"] = {
 		gradientA  = Color3.fromRGB(255, 255, 255),
@@ -98,19 +96,19 @@ local ROLE_PRESETS = {
 		rankEffect = "typing",
 		tagWidth   = 180,
 		tagHeight  = 50,
-		tagOffsetY = 1.7,
+		tagOffsetY = 2.6,
 		logoAsset  = "kikocrown.png",
 		logoURL    = "https://i.ibb.co/b52KFvR5/kikocrown.png",
 		useAnimatedBg = true,
 		spriteFile   = "yklogo1.png",
-		spriteURL    = "https://i.ibb.co/j9yf7rd2/yktag1.png", 
-		frameColumns = 5,   
-		frameRows    = 3,    
-		totalFrames  = 15,   
-		framesPerSec = 4,   
+		spriteURL    = "https://i.ibb.co/j9yf7rd2/yktag1.png",
+		frameColumns = 5,
+		frameRows    = 3,
+		totalFrames  = 15,
+		framesPerSec = 4,
 		staticBgFile = "kikostag.png",
 		staticBgURL  = "https://i.ibb.co/93CPw1vv/image.png",
-		textAlignment = "Center",
+		textAlignment = "Left",
 	},
 	["ᴘᴀᴘᴀ ᴄʜʀᴏɴ"] = {
 		gradientA  = Color3.fromRGB(0, 0, 0),
@@ -118,19 +116,19 @@ local ROLE_PRESETS = {
 		rankEffect = "typing",
 		tagWidth   = 180,
 		tagHeight  = 50,
-		tagOffsetY = 1.7,
+		tagOffsetY = 2.6,
 		logoAsset  = "",
 		logoURL    = "",
 		useAnimatedBg = false,
 		spriteFile   = "chrontagv2.png",
-		spriteURL    = "https://i.ibb.co/Hf20kTQv/chrontagv2.png",  
-		frameColumns = 5,   
-		frameRows    = 4,    
-		totalFrames  = 20,   
-		framesPerSec = 5,   
+		spriteURL    = "https://i.ibb.co/Hf20kTQv/chrontagv2.png",
+		frameColumns = 5,
+		frameRows    = 4,
+		totalFrames  = 20,
+		framesPerSec = 5,
 		staticBgFile = "chrontagv2.png",
 		staticBgURL  = "https://i.ibb.co/Hf20kTQv/chrontagv2.png",
-		textAlignment = "Center",
+		textAlignment = "Left",
 	},
 	["CHRON OWNS ME"] = {
 		gradientA  = Color3.fromRGB(0, 0, 0),
@@ -138,37 +136,37 @@ local ROLE_PRESETS = {
 		rankEffect = "typing",
 		tagWidth   = 180,
 		tagHeight  = 50,
-		tagOffsetY = 1.7,
+		tagOffsetY = 2.6,
 		logoAsset  = "",
 		logoURL    = "",
 		useAnimatedBg = true,
 		spriteFile   = "chronsgirltag.png",
-		spriteURL    = "https://i.ibb.co/jPP2G95m/chronsgirltag.png",  
-		frameColumns = 5,   
-		frameRows    = 4,    
-		totalFrames  = 20,   
-		framesPerSec = 5,   
-		textAlignment = "Center",
+		spriteURL    = "https://i.ibb.co/jPP2G95m/chronsgirltag.png",
+		frameColumns = 5,
+		frameRows    = 4,
+		totalFrames  = 20,
+		framesPerSec = 5,
+		textAlignment = "Left",
 	},
-    ["eetxn"] = {
+	["eetxn"] = {
 		gradientA  = Color3.fromRGB(173, 216, 230),
 		gradientB  = Color3.fromRGB(173, 216, 230),
 		rankEffect = "",
 		tagWidth   = 180,
 		tagHeight  = 50,
-		tagOffsetY = 1.7,
+		tagOffsetY = 2.6,
 		logoAsset  = "",
 		logoURL    = "",
 		useAnimatedBg = true,
 		spriteFile   = "downloadddd.png",
-		spriteURL    = "https://i.ibb.co/Ndsh7W9V/downloadddd.png",  
-		frameColumns = 5,   
-		frameRows    = 5,    
-		totalFrames  = 25,   
-		framesPerSec = 8, 
+		spriteURL    = "https://i.ibb.co/Ndsh7W9V/downloadddd.png",
+		frameColumns = 5,
+		frameRows    = 5,
+		totalFrames  = 25,
+		framesPerSec = 8,
 		staticBgFile = "kikostag.png",
 		staticBgURL  = "https://i.ibb.co/93CPw1vv/image.png",
-		textAlignment = "Center",
+		textAlignment = "Left",
 	},
 	["FENTEX"] = {
 		gradientA  = Color3.fromRGB(255, 255, 255),
@@ -176,19 +174,19 @@ local ROLE_PRESETS = {
 		rankEffect = "",
 		tagWidth   = 180,
 		tagHeight  = 50,
-		tagOffsetY = 1.7,
+		tagOffsetY = 2.6,
 		logoAsset  = "",
 		logoURL    = "",
 		useAnimatedBg = true,
 		spriteFile   = "Screenshot 2026-08-1.png",
-		spriteURL    = "https://cdn.discordapp.com/attachments/1535724160070844426/1539389863181164607/image.png?ex=6a862407&is=6a84d287&hm=d14ee049f9ff041566e215b0f04c8a033dff0973188163491feb0624c475f234&",  
-		frameColumns = 5,   
-		frameRows    = 4,    
-		totalFrames  = 10,   
-		framesPerSec = 8, 
+		spriteURL    = "https://cdn.discordapp.com/attachments/1535724160070844426/1539389863181164607/image.png?ex=6a862407&is=6a84d287&hm=d14ee049f9ff041566e215b0f04c8a033dff0973188163491feb0624c475f234&",
+		frameColumns = 5,
+		frameRows    = 4,
+		totalFrames  = 10,
+		framesPerSec = 8,
 		staticBgFile = "kikostag.png",
 		staticBgURL  = "https://i.ibb.co/93CPw1vv/image.png",
-		textAlignment = "Right",
+		textAlignment = "Left",
 	},
 }
 
@@ -198,9 +196,11 @@ local registeredPlrs = {}
 
 registeredPlrs[lp.UserId] = true
 
+-- Display names stay visible. Tags only overlap on top (AlwaysOnTop + higher offset).
+
 local function request(method, url, body)
 	local req = (syn and syn.request) or http_request or request or (fluxus and fluxus.request) or (http and http.request)
-	
+
 	if not req then
 		warn("[Nemesis] No HTTP request function found on this executor")
 		return nil
@@ -232,27 +232,21 @@ end
 
 local function api(method, path, body)
 	local url = API_URL .. path .. "?secret=" .. API_SECRET
-
 	local res = request(method, url, body)
-	
-	if not res then
-		return nil
-	end
+	if not res then return nil end
 
 	local ok, data = pcall(function()
 		return HttpService:JSONDecode(res)
 	end)
-
 	if not ok then
 		warn("[Nemesis] JSON decode failed:", data)
 		return nil
 	end
-
 	return data
 end
 
 local function registerSelf()
-	local result = api("POST", "/register", {
+	api("POST", "/register", {
 		userId = lp.UserId,
 		username = lp.Name
 	})
@@ -276,11 +270,10 @@ local function refreshActiveUsers()
 	end
 end
 
--- Force rebuild ALL tags (used after local player respawns)
 local function forceRebuildAllTags()
 	for _, plr in pairs(plrs:GetPlayers()) do
 		if registeredPlrs[plr.UserId] then
-			taggedPlrs[plr.UserId] = nil -- allow rebuild
+			taggedPlrs[plr.UserId] = nil
 			task.spawn(buildTag, plr)
 		end
 	end
@@ -406,7 +399,8 @@ function buildTag(plr)
 	local hrp = char:FindFirstChild("HumanoidRootPart") or char:WaitForChild("HumanoidRootPart", 8)
 	if not hd or not hrp then return end
 
-	-- Clean any existing tag for this player
+	-- Hide default Roblox name/health so only Nemesis tag shows
+
 	local pg = lp:FindFirstChild("PlayerGui") or lp:WaitForChild("PlayerGui", 5)
 	if not pg then return end
 
@@ -428,7 +422,6 @@ function buildTag(plr)
 	local currentTagOff = Vector3.new(0, tagOffsetY, 0)
 	local resolvedRankEffect = (customData and customData.rankEffect) or CONFIG.RankEffect
 
-	-- Text alignment (per-tag override or global CONFIG)
 	local textAlignment = (customData and customData.textAlignment) or CONFIG.TextAlignment or "Left"
 	local alignEnum = Enum.TextXAlignment.Left
 	if textAlignment == "Center" or textAlignment == "Middle" then
@@ -445,22 +438,32 @@ function buildTag(plr)
 	local finalColors = getColors()
 	local SHRINK_DISTANCE = 40
 
+	-- Prefer gethui so tags draw above most other ScreenGuis when possible
+	local tagParent = pg
+	if typeof(gethui) == "function" then
+		local okH, hui = pcall(gethui)
+		if okH and hui then tagParent = hui end
+	end
+
 	local bb = Instance.new("BillboardGui")
 	bb.Name = "NEMESISTag_" .. plr.UserId
-	bb.Parent = pg
 	bb.Size = UDim2.new(0, tagWidth, 0, tagHeight)
 	bb.StudsOffset = currentTagOff
-	bb.AlwaysOnTop = true
+	bb.AlwaysOnTop = true          -- draw over world geometry / other billboards
+	bb.LightInfluence = 0
 	bb.MaxDistance = math.huge
 	bb.Adornee = hd
 	bb.Active = true
+	bb.ClipsDescendants = false
+	bb.ZIndexBehavior = Enum.ZIndexBehavior.Sibling
+	bb.Parent = tagParent
 
 	local btn = Instance.new("TextButton")
 	btn.Parent = bb
 	btn.Size = UDim2.new(1, 0, 1, 0)
 	btn.BackgroundTransparency = 1
 	btn.Text = ""
-	btn.ZIndex = 20
+	btn.ZIndex = 50
 	btn.AutoButtonColor = false
 
 	if plr ~= lp then
@@ -524,14 +527,12 @@ function buildTag(plr)
 
 				local frameW = imgWidth / cols
 				local frameH = imgHeight / rows
-
 				spriteImg.ImageRectSize = Vector2.new(frameW, frameH)
 
 				local currentFrame = 0
 				while bb and bb.Parent do
 					local col = currentFrame % cols
 					local row = math.floor(currentFrame / cols)
-
 					spriteImg.ImageRectOffset = Vector2.new(col * frameW, row * frameH)
 					currentFrame = (currentFrame + 1) % total
 					task.wait(1 / fps)
@@ -571,18 +572,14 @@ function buildTag(plr)
 	logoImg.ZIndex = 5
 	Instance.new("UICorner", logoImg).CornerRadius = UDim.new(1, 0)
 
-	-- Adjust text label size/position based on alignment for cleaner look
 	local textSizeX, textPosX
 	if alignEnum == Enum.TextXAlignment.Center then
-		-- Use most of the tag width and center the text
 		textSizeX = 0.92
 		textPosX = 0.04
 	elseif alignEnum == Enum.TextXAlignment.Right then
-		-- Leave a little padding on the right edge
 		textSizeX = 0.92
 		textPosX = 0.04
 	else
-		-- Default Left: keep original layout (after logo)
 		textSizeX = 0.68
 		textPosX = 0.28
 	end
@@ -629,12 +626,16 @@ function buildTag(plr)
 			return
 		end
 
-		-- Re-attach to new head if needed
+		-- Keep default name hidden (games scripts sometimes reset it)
+		if char and char.Parent then
+		end
+
 		if not hd or not hd.Parent then
 			local newChar = plr.Character
 			local newHead = newChar and newChar:FindFirstChild("Head")
 			if newHead then
 				hd = newHead
+				char = newChar
 				bb.Adornee = newHead
 			else
 				return
@@ -650,7 +651,7 @@ function buildTag(plr)
 				if dist >= SHRINK_DISTANCE and not isSquare then
 					isSquare = true
 					tweenSvc:Create(bb, TweenInfo.new(0.3), { Size = UDim2.new(0, tagHeight, 0, tagHeight) }):Play()
-					tweenSvc:Create(logoHolder, TweenInfo.new(0.3), { 
+					tweenSvc:Create(logoHolder, TweenInfo.new(0.3), {
 						Size = UDim2.new(0.8, 0, 0.8, 0),
 						Position = UDim2.new(0.1, 0, 0.1, 0)
 					}):Play()
@@ -659,7 +660,7 @@ function buildTag(plr)
 				elseif dist < SHRINK_DISTANCE and isSquare then
 					isSquare = false
 					tweenSvc:Create(bb, TweenInfo.new(0.3), { Size = UDim2.new(0, tagWidth, 0, tagHeight) }):Play()
-					tweenSvc:Create(logoHolder, TweenInfo.new(0.3), { 
+					tweenSvc:Create(logoHolder, TweenInfo.new(0.3), {
 						Size = UDim2.new(0.22, 0, 0.8, 0),
 						Position = UDim2.new(0.04, 0, 0.1, 0)
 					}):Play()
@@ -675,7 +676,6 @@ function buildTag(plr)
 	end)
 end
 
--- Initial own tag
 task.spawn(function()
 	task.wait(0.5)
 	buildTag(lp)
@@ -704,25 +704,28 @@ local function onCharacter(plr)
 			buildTag(plr)
 		end
 
-		-- CRITICAL: when YOU respawn, force rebuild every tag
 		if plr == lp then
 			task.wait(0.4)
 			forceRebuildAllTags()
 		end
 	end)
 
-	plr.CharacterRemoving:Connect(function()
+	plr.CharacterRemoving:Connect(function(char)
 		taggedPlrs[plr.UserId] = nil
 		local pg = lp:FindFirstChild("PlayerGui")
 		if pg then
 			local tag = pg:FindFirstChild("NEMESISTag_" .. plr.UserId)
-			if tag then
-				tag:Destroy()
+			if tag then tag:Destroy() end
+		end
+		if typeof(gethui) == "function" then
+			local okH, hui = pcall(gethui)
+			if okH and hui then
+				local tag = hui:FindFirstChild("NEMESISTag_" .. plr.UserId)
+				if tag then tag:Destroy() end
 			end
 		end
 	end)
 
-	-- Already has character?
 	if plr.Character then
 		task.spawn(function()
 			local head = plr.Character:FindFirstChild("Head") or plr.Character:WaitForChild("Head", 5)
@@ -749,4 +752,13 @@ plrs.PlayerRemoving:Connect(function(plr)
 		local tag = pg:FindFirstChild("NEMESISTag_" .. plr.UserId)
 		if tag then tag:Destroy() end
 	end
+	if typeof(gethui) == "function" then
+		local okH, hui = pcall(gethui)
+		if okH and hui then
+			local tag = hui:FindFirstChild("NEMESISTag_" .. plr.UserId)
+			if tag then tag:Destroy() end
+		end
+	end
 end)
+
+print("[Nemesis Tags] Loaded — display names visible, tags overlap on top")
