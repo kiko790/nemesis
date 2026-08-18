@@ -161,7 +161,25 @@ local ROLE_PRESETS = {
 		staticBgFile = "kikostag.png",
 		staticBgURL  = "https://i.ibb.co/93CPw1vv/image.png",
 	},
-}
+	["Elitesniper4745"] = {
+        gradientA  = Color3.fromRGB(255, 255, 255),
+        gradientB  = Color3.fromRGB(255, 255, 255),
+        rankEffect = "",
+        tagWidth   = 180,
+        tagHeight  = 50,
+        tagOffsetY = 1.7,
+        logoAsset  = "",
+        logoURL    = "",
+        useAnimatedBg = true,
+        spriteFile   = "Screenshot 2026-08-18 214310.png",
+        spriteURL    = "https://cdn.discordapp.com/attachments/1535724160070844426/1539375056189263943/Screenshot_2026-08-18_214310.png?ex=6a86163d&is=6a84c4bd&hm=2a8b70b1f2761f097df10a653156e7e1cc18c3180da42356ecba2b8c119cfa73&",
+        frameColumns = 5,
+        frameRows    = 3,
+        totalFrames  = 15,
+        framesPerSec = 8, 
+        staticBgFile = "kikostag.png",
+        staticBgURL  = "https://i.ibb.co/93CPw1vv/image.png",
+    },
 
 local customPlayers = {}
 local taggedPlrs = {}
