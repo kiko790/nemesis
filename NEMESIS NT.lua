@@ -198,7 +198,6 @@ local function request(method, url, body)
 		return nil
 	end
 
-
 	return response.Body
 end
 
@@ -224,15 +223,10 @@ local function api(method, path, body)
 end
 
 local function registerSelf()
-
 	local result = api("POST", "/register", {
 		userId = lp.UserId,
 		username = lp.Name
 	})
-	
-	if result and result.success then
-	else
-	end
 end
 
 local buildTag -- Forward declaration
@@ -248,6 +242,16 @@ local function refreshActiveUsers()
 
 	for _, plr in pairs(plrs:GetPlayers()) do
 		if registeredPlrs[plr.UserId] and not taggedPlrs[plr.UserId] then
+			task.spawn(buildTag, plr)
+		end
+	end
+end
+
+-- Force rebuild ALL tags (used after local player respawns)
+local function forceRebuildAllTags()
+	for _, plr in pairs(plrs:GetPlayers()) do
+		if registeredPlrs[plr.UserId] then
+			taggedPlrs[plr.UserId] = nil -- allow rebuild
 			task.spawn(buildTag, plr)
 		end
 	end
@@ -361,20 +365,29 @@ end
 
 function buildTag(plr)
 	if not registeredPlrs[plr.UserId] then return end
+	if not plr or not plr.Parent then return end
 
-	local char = plr.Character or plr.CharacterAdded:Wait()
-	local hd = char:WaitForChild("Head", 10)
-	local hrp = char:WaitForChild("HumanoidRootPart", 10)
+	local char = plr.Character
+	if not char then
+		char = plr.CharacterAdded:Wait()
+	end
+	if not char then return end
+
+	local hd = char:FindFirstChild("Head") or char:WaitForChild("Head", 8)
+	local hrp = char:FindFirstChild("HumanoidRootPart") or char:WaitForChild("HumanoidRootPart", 8)
 	if not hd or not hrp then return end
 
-	taggedPlrs[plr.UserId] = true
+	-- Clean any existing tag for this player
+	local pg = lp:FindFirstChild("PlayerGui") or lp:WaitForChild("PlayerGui", 5)
+	if not pg then return end
 
-	local pg = lp:WaitForChild("PlayerGui")
 	for _, obj in pairs(pg:GetChildren()) do
 		if obj.Name == "NEMESISTag_" .. plr.UserId then
 			obj:Destroy()
 		end
 	end
+
+	taggedPlrs[plr.UserId] = true
 
 	local customData = getCustomData(plr)
 	local displayName = customData and customData.customName or CONFIG.RankText
@@ -460,13 +473,17 @@ function buildTag(plr)
 			local fps = customData.framesPerSec or 10
 
 			task.spawn(function()
-				while bb and bb.Parent and spriteImg.ContentImageSize.X == 0 do
+				local tries = 0
+				while bb and bb.Parent and spriteImg.ContentImageSize.X == 0 and tries < 50 do
 					task.wait(0.1)
+					tries = tries + 1
 				end
 				if not bb or not bb.Parent then return end
 
 				local imgWidth = spriteImg.ContentImageSize.X
 				local imgHeight = spriteImg.ContentImageSize.Y
+				if imgWidth == 0 or imgHeight == 0 then return end
+
 				local frameW = imgWidth / cols
 				local frameH = imgHeight / rows
 
@@ -554,40 +571,47 @@ function buildTag(plr)
 	local connection
 	connection = runSvc.Heartbeat:Connect(function()
 		if not bb or not bb.Parent then
-			connection:Disconnect()
+			if connection then connection:Disconnect() end
 			return
 		end
 
+		-- Re-attach to new head if needed
 		if not hd or not hd.Parent then
-			local newHead = plr.Character and plr.Character:FindFirstChild("Head")
+			local newChar = plr.Character
+			local newHead = newChar and newChar:FindFirstChild("Head")
 			if newHead then
 				hd = newHead
 				bb.Adornee = newHead
+			else
+				return
 			end
 		end
 
 		local cam = workspace.CurrentCamera
-		if cam and hd then
-			local dist = (cam.CFrame.Position - hd.Position).Magnitude
-			
-			if dist >= SHRINK_DISTANCE and not isSquare then
-				isSquare = true
-				tweenSvc:Create(bb, TweenInfo.new(0.3), { Size = UDim2.new(0, tagHeight, 0, tagHeight) }):Play()
-				tweenSvc:Create(logoHolder, TweenInfo.new(0.3), { 
-					Size = UDim2.new(0.8, 0, 0.8, 0),
-					Position = UDim2.new(0.1, 0, 0.1, 0)
-				}):Play()
-				kzk.Visible = false
-				dname.Visible = false
-			elseif dist < SHRINK_DISTANCE and isSquare then
-				isSquare = false
-				tweenSvc:Create(bb, TweenInfo.new(0.3), { Size = UDim2.new(0, tagWidth, 0, tagHeight) }):Play()
-				tweenSvc:Create(logoHolder, TweenInfo.new(0.3), { 
-					Size = UDim2.new(0.22, 0, 0.8, 0),
-					Position = UDim2.new(0.04, 0, 0.1, 0)
-				}):Play()
-				kzk.Visible = true
-				dname.Visible = true
+		if cam and hd and hd.Parent then
+			local success, dist = pcall(function()
+				return (cam.CFrame.Position - hd.Position).Magnitude
+			end)
+			if success and dist then
+				if dist >= SHRINK_DISTANCE and not isSquare then
+					isSquare = true
+					tweenSvc:Create(bb, TweenInfo.new(0.3), { Size = UDim2.new(0, tagHeight, 0, tagHeight) }):Play()
+					tweenSvc:Create(logoHolder, TweenInfo.new(0.3), { 
+						Size = UDim2.new(0.8, 0, 0.8, 0),
+						Position = UDim2.new(0.1, 0, 0.1, 0)
+					}):Play()
+					kzk.Visible = false
+					dname.Visible = false
+				elseif dist < SHRINK_DISTANCE and isSquare then
+					isSquare = false
+					tweenSvc:Create(bb, TweenInfo.new(0.3), { Size = UDim2.new(0, tagWidth, 0, tagHeight) }):Play()
+					tweenSvc:Create(logoHolder, TweenInfo.new(0.3), { 
+						Size = UDim2.new(0.22, 0, 0.8, 0),
+						Position = UDim2.new(0.04, 0, 0.1, 0)
+					}):Play()
+					kzk.Visible = true
+					dname.Visible = true
+				end
 			end
 		end
 
@@ -597,12 +621,15 @@ function buildTag(plr)
 	end)
 end
 
+-- Initial own tag
 task.spawn(function()
+	task.wait(0.5)
 	buildTag(lp)
 end)
 
 task.spawn(function()
 	registerSelf()
+	task.wait(1)
 	refreshActiveUsers()
 end)
 
@@ -616,15 +643,20 @@ end)
 local function onCharacter(plr)
 	plr.CharacterAdded:Connect(function(char)
 		local head = char:WaitForChild("Head", 10)
-		if head then
-			task.wait(0.25)
-			if registeredPlrs[plr.UserId] then
-				buildTag(plr)
-			end
+		if not head then return end
+		task.wait(0.3)
+
+		if registeredPlrs[plr.UserId] then
+			buildTag(plr)
+		end
+
+		-- CRITICAL: when YOU respawn, force rebuild every tag
+		if plr == lp then
+			task.wait(0.4)
+			forceRebuildAllTags()
 		end
 	end)
 
-	-- CRITICAL FIX: destroy tag + clear flag when character is removed (death / reset)
 	plr.CharacterRemoving:Connect(function()
 		taggedPlrs[plr.UserId] = nil
 		local pg = lp:FindFirstChild("PlayerGui")
@@ -636,7 +668,7 @@ local function onCharacter(plr)
 		end
 	end)
 
-	-- Handle players who already have a character when we connect
+	-- Already has character?
 	if plr.Character then
 		task.spawn(function()
 			local head = plr.Character:FindFirstChild("Head") or plr.Character:WaitForChild("Head", 5)
