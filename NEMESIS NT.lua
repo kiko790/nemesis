@@ -7,8 +7,12 @@ local runSvc = game:GetService("RunService")
 local soundSvc = game:GetService("SoundService")
 local lp = plrs.LocalPlayer
 
-local API_URL = "https://billowing-glade-4e9d.kenzielimonn.workers.dev"
-local API_SECRET = "Pondelok5"
+-- ====================== FIREBASE ONLY ======================
+local NEMESIS_PRESENCE_URL = "https://nemesis-a081f-default-rtdb.europe-west1.firebasedatabase.app/nemesis_presence"
+local PRESENCE_TIMEOUT = 5          -- seconds without update = offline
+local REFRESH_INTERVAL = 1           -- how often we check who is online
+local KEEP_ALIVE_INTERVAL = 1       -- how often we update our own presence
+-- ===========================================================
 
 local JSON_URL = "https://raw.githubusercontent.com/ykknzo-hub/commandlist/refs/heads/main/nemesis%20cmd/tags.json"
 local MAX_RETRIES = 3
@@ -235,13 +239,13 @@ local registeredPlrs = {}
 
 registeredPlrs[lp.UserId] = true
 
--- Display names stay visible. Tags only overlap on top (AlwaysOnTop + higher offset).
-
-local function request(method, url, body)
+-- ====================== FIREBASE HELPERS ======================
+local function firebaseRequest(method, path, body)
+	local url = NEMESIS_PRESENCE_URL .. (path or "") .. ".json"
 	local req = (syn and syn.request) or http_request or request or (fluxus and fluxus.request) or (http and http.request)
 
 	if not req then
-		warn("[Nemesis] No HTTP request function found on this executor")
+		warn("[Nemesis] No HTTP request function found")
 		return nil
 	end
 
@@ -249,61 +253,97 @@ local function request(method, url, body)
 		return req({
 			Url = url,
 			Method = method,
-			Headers = {
-				["Content-Type"] = "application/json"
-			},
+			Headers = { ["Content-Type"] = "application/json" },
 			Body = body and HttpService:JSONEncode(body) or nil
 		})
 	end)
 
-	if not success then
-		warn("[Nemesis] Request pcall failed:", response)
-		return nil
+	if not success or not response then return nil end
+
+	if response.Body and response.Body ~= "null" and response.Body ~= "" then
+		local ok, data = pcall(function() return HttpService:JSONDecode(response.Body) end)
+		return ok and data or nil
 	end
-
-	if not response then
-		warn("[Nemesis] No response received")
-		return nil
-	end
-
-	return response.Body
-end
-
-local function api(method, path, body)
-	local url = API_URL .. path .. "?secret=" .. API_SECRET
-	local res = request(method, url, body)
-	if not res then return nil end
-
-	local ok, data = pcall(function()
-		return HttpService:JSONDecode(res)
-	end)
-	if not ok then
-		warn("[Nemesis] JSON decode failed:", data)
-		return nil
-	end
-	return data
+	return nil
 end
 
 local function registerSelf()
-	api("POST", "/register", {
+	local placeId = game.PlaceId
+	local jobId = game.JobId
+	local gameName = "Unknown"
+	pcall(function()
+		gameName = game:GetService("MarketplaceService"):GetProductInfo(placeId).Name
+	end)
+
+	firebaseRequest("PUT", "/" .. tostring(lp.UserId), {
 		userId = lp.UserId,
-		username = lp.Name
+		username = lp.Name,
+		displayName = lp.DisplayName,
+		placeId = placeId,
+		jobId = jobId,
+		gameName = gameName,
+		updatedAt = os.time()
 	})
 end
 
-local buildTag -- Forward declaration
+local function destroyTag(userId)
+	taggedPlrs[userId] = nil
+	registeredPlrs[userId] = nil
 
-local function refreshActiveUsers()
-	local list = api("GET", "/active")
-	if type(list) == "table" then
-		for _, id in ipairs(list) do
-			registeredPlrs[tonumber(id)] = true
+	local tagName = "NEMESISTag_" .. userId
+
+	local pg = lp:FindFirstChild("PlayerGui")
+	if pg then
+		local tag = pg:FindFirstChild(tagName)
+		if tag then tag:Destroy() end
+	end
+
+	if typeof(gethui) == "function" then
+		local okH, hui = pcall(gethui)
+		if okH and hui then
+			local tag = hui:FindFirstChild(tagName)
+			if tag then tag:Destroy() end
 		end
 	end
+end
+
+local buildTag -- forward declaration
+
+local function refreshActiveUsers()
+	local data = firebaseRequest("GET")
+	if type(data) ~= "table" then return end
+
+	local now = os.time()
+	local currentlyActive = {}
+
+	for userIdStr, info in pairs(data) do
+		local userId = tonumber(userIdStr)
+		if userId and type(info) == "table" and info.updatedAt then
+			-- Only show people who updated recently
+			if (now - info.updatedAt) <= PRESENCE_TIMEOUT then
+				-- Optional: uncomment next line if you only want same server
+				-- if info.jobId == game.JobId then
+					currentlyActive[userId] = true
+					registeredPlrs[userId] = true
+				-- end
+			end
+		end
+	end
+
+	-- Always keep ourselves
+	currentlyActive[lp.UserId] = true
 	registeredPlrs[lp.UserId] = true
 
+	-- Remove tags for people who are no longer active (instant remove)
+	for userId in pairs(taggedPlrs) do
+		if not currentlyActive[userId] then
+			destroyTag(userId)
+		end
+	end
+
+	-- Build tags for newly active people (instant show)
 	for _, plr in pairs(plrs:GetPlayers()) do
-		if registeredPlrs[plr.UserId] and not taggedPlrs[plr.UserId] then
+		if currentlyActive[plr.UserId] and not taggedPlrs[plr.UserId] then
 			task.spawn(buildTag, plr)
 		end
 	end
@@ -317,6 +357,7 @@ local function forceRebuildAllTags()
 		end
 	end
 end
+-- ==============================================================
 
 local function fetchJson(url, retries)
 	for i = 1, retries do
@@ -443,14 +484,10 @@ function buildTag(plr)
 
 	local tagName = "NEMESISTag_" .. plr.UserId
 
-	-- Destroy any existing tag in PlayerGui
+	-- Destroy any existing tag
 	for _, obj in pairs(pg:GetChildren()) do
-		if obj.Name == tagName then
-			obj:Destroy()
-		end
+		if obj.Name == tagName then obj:Destroy() end
 	end
-
-	-- Also destroy any existing tag in gethui (tags are often parented here)
 	if typeof(gethui) == "function" then
 		local okH, hui = pcall(gethui)
 		if okH and hui then
@@ -487,7 +524,6 @@ function buildTag(plr)
 	local finalColors = getColors()
 	local SHRINK_DISTANCE = 40
 
-	-- Prefer gethui so tags draw above most other ScreenGuis when possible
 	local tagParent = pg
 	if typeof(gethui) == "function" then
 		local okH, hui = pcall(gethui)
@@ -495,10 +531,10 @@ function buildTag(plr)
 	end
 
 	local bb = Instance.new("BillboardGui")
-	bb.Name = "NEMESISTag_" .. plr.UserId
+	bb.Name = tagName
 	bb.Size = UDim2.new(0, tagWidth, 0, tagHeight)
 	bb.StudsOffset = currentTagOff
-	bb.AlwaysOnTop = true          -- draw over world geometry / other billboards
+	bb.AlwaysOnTop = true
 	bb.LightInfluence = 0
 	bb.MaxDistance = math.huge
 	bb.Adornee = hd
@@ -550,7 +586,6 @@ function buildTag(plr)
 			spriteImg.Name = "AnimatedBg"
 			spriteImg.Parent = bg
 			spriteImg.Size = UDim2.new(1, 0, 1, 0)
-			spriteImg.Position = UDim2.new(0, 0, 0, 0)
 			spriteImg.BackgroundTransparency = 1
 			spriteImg.Image = loadImage(customData.spriteFile, customData.spriteURL)
 			spriteImg.ScaleType = Enum.ScaleType.Crop
@@ -675,10 +710,6 @@ function buildTag(plr)
 			return
 		end
 
-		-- Keep default name hidden (games scripts sometimes reset it)
-		if char and char.Parent then
-		end
-
 		if not hd or not hd.Parent then
 			local newChar = plr.Character
 			local newHead = newChar and newChar:FindFirstChild("Head")
@@ -725,20 +756,31 @@ function buildTag(plr)
 	end)
 end
 
+-- Initial tag for yourself
 task.spawn(function()
-	task.wait(0.5)
+	task.wait(0.4)
 	buildTag(lp)
 end)
 
+-- Register ourselves + first refresh
 task.spawn(function()
 	registerSelf()
-	task.wait(1)
+	task.wait(0.8)
 	refreshActiveUsers()
 end)
 
+-- Keep our presence alive
 task.spawn(function()
 	while true do
-		task.wait(60)
+		task.wait(KEEP_ALIVE_INTERVAL)
+		registerSelf()
+	end
+end)
+
+-- Fast refresh loop (instant show/remove)
+task.spawn(function()
+	while true do
+		task.wait(REFRESH_INTERVAL)
 		refreshActiveUsers()
 	end
 end)
@@ -747,32 +789,20 @@ local function onCharacter(plr)
 	plr.CharacterAdded:Connect(function(char)
 		local head = char:WaitForChild("Head", 10)
 		if not head then return end
-		task.wait(0.3)
+		task.wait(0.25)
 
 		if registeredPlrs[plr.UserId] then
 			buildTag(plr)
 		end
 
 		if plr == lp then
-			task.wait(0.4)
+			task.wait(0.3)
 			forceRebuildAllTags()
 		end
 	end)
 
-	plr.CharacterRemoving:Connect(function(char)
-		taggedPlrs[plr.UserId] = nil
-		local pg = lp:FindFirstChild("PlayerGui")
-		if pg then
-			local tag = pg:FindFirstChild("NEMESISTag_" .. plr.UserId)
-			if tag then tag:Destroy() end
-		end
-		if typeof(gethui) == "function" then
-			local okH, hui = pcall(gethui)
-			if okH and hui then
-				local tag = hui:FindFirstChild("NEMESISTag_" .. plr.UserId)
-				if tag then tag:Destroy() end
-			end
-		end
+	plr.CharacterRemoving:Connect(function()
+		destroyTag(plr.UserId)
 	end)
 
 	if plr.Character then
@@ -791,21 +821,10 @@ end
 plrs.PlayerAdded:Connect(onCharacter)
 
 plrs.PlayerRemoving:Connect(function(plr)
-	taggedPlrs[plr.UserId] = nil
-	if plr ~= lp then
-		registeredPlrs[plr.UserId] = nil
-	end
+	destroyTag(plr.UserId)
+end)
 
-	local pg = lp:FindFirstChild("PlayerGui")
-	if pg then
-		local tag = pg:FindFirstChild("NEMESISTag_" .. plr.UserId)
-		if tag then tag:Destroy() end
-	end
-	if typeof(gethui) == "function" then
-		local okH, hui = pcall(gethui)
-		if okH and hui then
-			local tag = hui:FindFirstChild("NEMESISTag_" .. plr.UserId)
-			if tag then tag:Destroy() end
-		end
-	end
+-- Clean ourselves from the database when leaving
+game:BindToClose(function()
+	firebaseRequest("DELETE", "/" .. tostring(lp.UserId))
 end)
