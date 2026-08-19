@@ -222,7 +222,7 @@ local ROLE_PRESETS = {
 		logoAsset  = "fentexlogp.png",
 		logoURL    = "https://cdn.discordapp.com/attachments/1535724160070844426/1539473233382998157/fentexlogp.png?ex=6a8671ac&is=6a85202c&hm=5abf802c1b2edf5121bb6f4903ceec955856a58ff6e27e57824afb080b61fa90&",
 		useAnimatedBg = true,
-		spriteFile   = "Screenshot 2026-08-1.png",
+		spriteFile   = "fentextag.png",
 		spriteURL    = "https://files.catbox.moe/pj35pk.png",
 		frameColumns = 5,
 		frameRows    = 4,
