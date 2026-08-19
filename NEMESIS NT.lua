@@ -439,14 +439,24 @@ function buildTag(plr)
 	local hrp = char:FindFirstChild("HumanoidRootPart") or char:WaitForChild("HumanoidRootPart", 8)
 	if not hd or not hrp then return end
 
-	-- Hide default Roblox name/health so only Nemesis tag shows
-
 	local pg = lp:FindFirstChild("PlayerGui") or lp:WaitForChild("PlayerGui", 5)
 	if not pg then return end
 
+	local tagName = "NEMESISTag_" .. plr.UserId
+
+	-- Destroy any existing tag in PlayerGui
 	for _, obj in pairs(pg:GetChildren()) do
-		if obj.Name == "NEMESISTag_" .. plr.UserId then
+		if obj.Name == tagName then
 			obj:Destroy()
+		end
+	end
+
+	-- Also destroy any existing tag in gethui (tags are often parented here)
+	if typeof(gethui) == "function" then
+		local okH, hui = pcall(gethui)
+		if okH and hui then
+			local existing = hui:FindFirstChild(tagName)
+			if existing then existing:Destroy() end
 		end
 	end
 
