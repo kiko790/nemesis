@@ -55,8 +55,8 @@ local LOGO_URL = "https://i.ibb.co/SwGkMS5h/whitelogo.png"
 
 local ROLE_PRESETS = {
 	["DEV"] = {
-		gradientA  = Color3.fromRGB(173, 216, 230),
-		gradientB  = Color3.fromRGB(173, 216, 230),
+		gradientA  = Color3.fromRGB(255,255,255),
+		gradientB  = Color3.fromRGB(0,0,0),
 		rankEffect = "",
 		tagWidth   = 180,
 		tagHeight  = 50,
