@@ -54,7 +54,7 @@ local LOGO_FILE = "whitelogo.png"
 local LOGO_URL = "https://i.ibb.co/SwGkMS5h/whitelogo.png"
 
 local ROLE_PRESETS = {
-	["​🇩​​🇪​​🇻​"] = {
+	["ᴅᴇᴠ"] = {
 		gradientA  = Color3.fromRGB(255,255,255),
 		gradientB  = Color3.fromRGB(0,0,0),
 		rankEffect = "",
