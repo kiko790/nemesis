@@ -66,8 +66,8 @@ local ROLE_PRESETS = {
 		frameRows    = 4,
 		totalFrames  = 15,
 		framesPerSec = 10,
-		staticBgFile = "tagkzr.png",
-		staticBgURL  = "https://cdn.discordapp.com/attachments/1493961870548144131/1539422380861038693/tagkzr.png?ex=6a864250&is=6a84f0d0&hm=e9217466c8355c2ac33af893b8fbb82836dd57e5c3e2e1fb9c61bb9a51bd6ae9&",
+		staticBgFile = "tojipfp.png",
+		staticBgURL  = "https://cdn.discordapp.com/attachments/1493961870548144131/1539427008352755913/tojipfp.png?ex=6a86469f&is=6a84f51f&hm=3165dec2b209bf1812cd9bdaf49578ebf5d67f6cfa808b117dc8e1e876b18519&",
 		textAlignment = "Left",
 	},
 	["ANGEL"] = {
