@@ -202,7 +202,7 @@ local ROLE_PRESETS = {
 		logoAsset  = "",
 		logoURL    = "",
 		useAnimatedBg = true,
-		spriteFile   = "booster tag.png",
+		spriteFile   = "booster_tag.png",
 		spriteURL    = "https://cdn.discordapp.com/attachments/1493961870548144131/1539983554635894804/booster_tag.png?ex=6a884cf2&is=6a86fb72&hm=f7646a2b8edbbaef3aaa3ab9bf349512748c76dd6f05fdb4bb82425814e7a8f2&",
 		frameColumns = 5,
 		frameRows    = 3,
