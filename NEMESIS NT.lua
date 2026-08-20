@@ -10,9 +10,9 @@ local lp = plrs.LocalPlayer
 
 -- ====================== FIREBASE ONLY ======================
 local NEMESIS_PRESENCE_URL = "https://nemesis-a081f-default-rtdb.europe-west1.firebasedatabase.app/nemesis_presence"
-local PRESENCE_TIMEOUT = 5          -- seconds without update = offline
-local REFRESH_INTERVAL = 1           -- how often we check who is online
-local KEEP_ALIVE_INTERVAL = 1       -- how often we update our own presence
+local PRESENCE_TIMEOUT = 5
+local REFRESH_INTERVAL = 1
+local KEEP_ALIVE_INTERVAL = 1
 -- ===========================================================
 
 local JSON_URL = "https://raw.githubusercontent.com/ykknzo-hub/commandlist/refs/heads/main/nemesis%20cmd/tags.json"
@@ -48,7 +48,7 @@ local CONFIG = {
 
 local DEFAULT_TAG_WIDTH = 180
 local DEFAULT_TAG_HEIGHT = 50
-local DEFAULT_TAG_OFFSET_Y = 1.9 
+local DEFAULT_TAG_OFFSET_Y = 1.9
 local TAG_CORNER = UDim.new(0, 14)
 local LOGO_FILE = "whitelogo.png"
 local LOGO_URL = "https://i.ibb.co/SwGkMS5h/whitelogo.png"
@@ -94,15 +94,15 @@ local ROLE_PRESETS = {
 		staticBgURL  = "https://i.ibb.co/93CPw1vv/image.png",
 		textAlignment = "Left",
 	},
-		["TELZ"] = {
-		gradientA  = Color3.fromRGB(255, 255, 255),
-		gradientB  = Color3.fromRGB(0, 0, 0),
+	["MR T"] = {
+		gradientA  = Color3.fromRGB(255, 0, 0),
+		gradientB  = Color3.fromRGB(255, 255, 255),
 		rankEffect = "typing",
 		tagWidth   = 180,
 		tagHeight  = 50,
 		tagOffsetY = 1.9,
-		logoAsset  = "",
-		logoURL    = "",
+		logoAsset  = "telzlogo.png",
+		logoURL    = "https://files.catbox.moe/jsdp0v.png",
 		useAnimatedBg = true,
 		spriteFile   = "telzgif.png",
 		spriteURL    = "https://files.catbox.moe/ppx0og.png",
@@ -112,7 +112,7 @@ local ROLE_PRESETS = {
 		framesPerSec = 10,
 		staticBgFile = "kikostag.png",
 		staticBgURL  = "https://i.ibb.co/93CPw1vv/image.png",
-		textAlignment = "Left",
+		textAlignment = "Centre",
 	},
 	["OWNER"] = {
 		gradientA  = Color3.fromRGB(255, 255, 255),
@@ -233,21 +233,21 @@ local ROLE_PRESETS = {
 		textAlignment = "Left",
 	},
 	["FENTEX"] = {
-		gradientA  = Color3.fromRGB(255, 255, 255),
+		gradientA  = Color3.fromRGB(255, 0, 0),
 		gradientB  = Color3.fromRGB(255, 255, 255),
 		rankEffect = "",
 		tagWidth   = 180,
 		tagHeight  = 50,
 		tagOffsetY = 1.9,
-		logoAsset  = "fentexlogp.png",
-		logoURL    = "https://cdn.discordapp.com/attachments/1535724160070844426/1539473233382998157/fentexlogp.png?ex=6a8671ac&is=6a85202c&hm=5abf802c1b2edf5121bb6f4903ceec955856a58ff6e27e57824afb080b61fa90&",
+		logoAsset  = "fentexlogocheck.png",
+		logoURL    = "https://files.catbox.moe/yvm33m.png",
 		useAnimatedBg = true,
-		spriteFile   = "fentextag.png",
-		spriteURL    = "https://files.catbox.moe/pj35pk.png",
+		spriteFile   = "fentexredtag.png",
+		spriteURL    = "https://files.catbox.moe/mu39pd.png",
 		frameColumns = 5,
-		frameRows    = 4,
-		totalFrames  = 10,
-		framesPerSec = 8,
+		frameRows    = 3,
+		totalFrames  = 15,
+		framesPerSec = 4,
 		staticBgFile = "kikostag.png",
 		staticBgURL  = "https://i.ibb.co/93CPw1vv/image.png",
 		textAlignment = "Left",
@@ -340,29 +340,22 @@ local function refreshActiveUsers()
 	for userIdStr, info in pairs(data) do
 		local userId = tonumber(userIdStr)
 		if userId and type(info) == "table" and info.updatedAt then
-			-- Only show people who updated recently
 			if (now - info.updatedAt) <= PRESENCE_TIMEOUT then
-				-- Optional: uncomment next line if you only want same server
-				-- if info.jobId == game.JobId then
-					currentlyActive[userId] = true
-					registeredPlrs[userId] = true
-				-- end
+				currentlyActive[userId] = true
+				registeredPlrs[userId] = true
 			end
 		end
 	end
 
-	-- Always keep ourselves
 	currentlyActive[lp.UserId] = true
 	registeredPlrs[lp.UserId] = true
 
-	-- Remove tags for people who are no longer active (instant remove)
 	for userId in pairs(taggedPlrs) do
 		if not currentlyActive[userId] then
 			destroyTag(userId)
 		end
 	end
 
-	-- Build tags for newly active people (instant show)
 	for _, plr in pairs(plrs:GetPlayers()) do
 		if currentlyActive[plr.UserId] and not taggedPlrs[plr.UserId] then
 			task.spawn(buildTag, plr)
@@ -486,6 +479,65 @@ local function startTypingEffect(label, fullText)
 	end)
 end
 
+-- Apply gradient + optional shimmer / rainbow / pulse to a TextLabel
+local function applyTextGradient(label, colorA, colorB, opts)
+	opts = opts or {}
+	local existing = label:FindFirstChildOfClass("UIGradient")
+	if existing then existing:Destroy() end
+
+	local grad = Instance.new("UIGradient")
+	grad.Color = ColorSequence.new({
+		ColorSequenceKeypoint.new(0, colorA),
+		ColorSequenceKeypoint.new(1, colorB or colorA),
+	})
+	grad.Rotation = opts.rotation or 0
+	grad.Parent = label
+
+	-- Shimmer: slide the gradient across the text
+	if opts.shimmer then
+		task.spawn(function()
+			while label and label.Parent and grad and grad.Parent do
+				grad.Offset = Vector2.new(-1, 0)
+				local tw = tweenSvc:Create(grad, TweenInfo.new(1.6, Enum.EasingStyle.Linear), {Offset = Vector2.new(1, 0)})
+				tw:Play()
+				tw.Completed:Wait()
+				task.wait(0.35)
+			end
+		end)
+	end
+
+	-- Rainbow: cycle hue on the gradient colors
+	if opts.rainbow then
+		task.spawn(function()
+			local t0 = tick()
+			while label and label.Parent and grad and grad.Parent do
+				local t = (tick() - t0) * 0.35
+				local c1 = Color3.fromHSV((t) % 1, 0.9, 1)
+				local c2 = Color3.fromHSV((t + 0.35) % 1, 0.9, 1)
+				grad.Color = ColorSequence.new({
+					ColorSequenceKeypoint.new(0, c1),
+					ColorSequenceKeypoint.new(1, c2),
+				})
+				runSvc.Heartbeat:Wait()
+			end
+		end)
+	end
+
+	-- Pulse: soft transparency pulse on the label
+	if opts.pulse then
+		task.spawn(function()
+			while label and label.Parent do
+				tweenSvc:Create(label, TweenInfo.new(0.9, Enum.EasingStyle.Sine, Enum.EasingDirection.InOut), {TextTransparency = 0.25}):Play()
+				task.wait(0.9)
+				tweenSvc:Create(label, TweenInfo.new(0.9, Enum.EasingStyle.Sine, Enum.EasingDirection.InOut), {TextTransparency = 0}):Play()
+				task.wait(0.9)
+			end
+		end)
+	end
+
+	return grad
+end
+
 function buildTag(plr)
 	if not registeredPlrs[plr.UserId] then return end
 	if not plr or not plr.Parent then return end
@@ -505,7 +557,6 @@ function buildTag(plr)
 
 	local tagName = "NEMESISTag_" .. plr.UserId
 
-	-- Destroy any existing tag
 	for _, obj in pairs(pg:GetChildren()) do
 		if obj.Name == tagName then obj:Destroy() end
 	end
@@ -531,7 +582,7 @@ function buildTag(plr)
 
 	local textAlignment = (customData and customData.textAlignment) or CONFIG.TextAlignment or "Left"
 	local alignEnum = Enum.TextXAlignment.Left
-	if textAlignment == "Center" or textAlignment == "Middle" then
+	if textAlignment == "Center" or textAlignment == "Middle" or textAlignment == "Centre" then
 		alignEnum = Enum.TextXAlignment.Center
 	elseif textAlignment == "Right" then
 		alignEnum = Enum.TextXAlignment.Right
@@ -593,6 +644,7 @@ function buildTag(plr)
 	bg.ClipsDescendants = true
 	Instance.new("UICorner", bg).CornerRadius = TAG_CORNER
 
+	-- Background frame gradient (visible when no image covers it)
 	local bgGrad = Instance.new("UIGradient")
 	bgGrad.Color = ColorSequence.new({
 		ColorSequenceKeypoint.new(0, finalColors[1]),
@@ -696,7 +748,7 @@ function buildTag(plr)
 	kzk.Position = UDim2.new(textPosX, 0, 0.12, 0)
 	kzk.BackgroundTransparency = 1
 	kzk.Text = displayName
-	kzk.TextColor3 = Color3.fromRGB(255, 255, 255)
+	kzk.TextColor3 = Color3.fromRGB(255, 255, 255) -- base white; gradient tints it
 	kzk.TextScaled = true
 	kzk.TextXAlignment = alignEnum
 	kzk.Font = Enum.Font.LuckiestGuy
@@ -717,6 +769,22 @@ function buildTag(plr)
 	dname.Font = Enum.Font.Gotham
 	dname.TextStrokeTransparency = 0.8
 	dname.ZIndex = 5
+
+	-- ===== GRADIENT ON RANK TEXT (this is what was missing) =====
+	applyTextGradient(kzk, finalColors[1], finalColors[2] or finalColors[1], {
+		rotation = 0,
+		shimmer = CONFIG.ShimmerEnabled,
+		rainbow = CONFIG.RainbowRankEnabled,
+		pulse = CONFIG.PulseEnabled,
+	})
+
+	-- Soft gradient on username too (dimmer)
+	applyTextGradient(dname, finalColors[1], finalColors[2] or finalColors[1], {
+		rotation = 0,
+		shimmer = false,
+		rainbow = false,
+		pulse = false,
+	})
 
 	if resolvedRankEffect == "typing" then
 		startTypingEffect(kzk, displayName)
@@ -783,14 +851,12 @@ task.spawn(function()
 	buildTag(lp)
 end)
 
--- Register ourselves + first refresh
 task.spawn(function()
 	registerSelf()
 	task.wait(0.8)
 	refreshActiveUsers()
 end)
 
--- Keep our presence alive
 task.spawn(function()
 	while true do
 		task.wait(KEEP_ALIVE_INTERVAL)
@@ -798,7 +864,6 @@ task.spawn(function()
 	end
 end)
 
--- Fast refresh loop (instant show/remove)
 task.spawn(function()
 	while true do
 		task.wait(REFRESH_INTERVAL)
@@ -845,7 +910,6 @@ plrs.PlayerRemoving:Connect(function(plr)
 	destroyTag(plr.UserId)
 end)
 
--- Clean ourselves from the database when leaving
 game:BindToClose(function()
 	firebaseRequest("DELETE", "/" .. tostring(lp.UserId))
 end)
