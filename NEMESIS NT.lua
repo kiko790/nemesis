@@ -234,7 +234,7 @@ local ROLE_PRESETS = {
 	},
 	["FENTEX"] = {
 		gradientA  = Color3.fromRGB(255, 0, 0),
-		gradientB  = Color3.fromRGB(255, 255, 255),
+		gradientB  = Color3.fromRGB(0, 0, 0),
 		rankEffect = "",
 		tagWidth   = 180,
 		tagHeight  = 50,
@@ -479,55 +479,67 @@ local function startTypingEffect(label, fullText)
 	end)
 end
 
--- Apply gradient + optional shimmer / rainbow / pulse to a TextLabel
+-- Classic swipe gradient: colors glide across the text left → right
 local function applyTextGradient(label, colorA, colorB, opts)
 	opts = opts or {}
 	local existing = label:FindFirstChildOfClass("UIGradient")
 	if existing then existing:Destroy() end
 
+	colorB = colorB or colorA
+
 	local grad = Instance.new("UIGradient")
+	-- 3-stop sequence so the bright band is visible as it swipes
 	grad.Color = ColorSequence.new({
-		ColorSequenceKeypoint.new(0, colorA),
-		ColorSequenceKeypoint.new(1, colorB or colorA),
+		ColorSequenceKeypoint.new(0,    colorA),
+		ColorSequenceKeypoint.new(0.45, colorB),
+		ColorSequenceKeypoint.new(0.55, colorA),
+		ColorSequenceKeypoint.new(1,    colorB),
 	})
 	grad.Rotation = opts.rotation or 0
+	grad.Offset = Vector2.new(-1, 0)
 	grad.Parent = label
 
-	-- Shimmer: slide the gradient across the text
-	if opts.shimmer then
+	-- Continuous color swipe (glide across)
+	if opts.shimmer ~= false then
 		task.spawn(function()
 			while label and label.Parent and grad and grad.Parent do
-				grad.Offset = Vector2.new(-1, 0)
-				local tw = tweenSvc:Create(grad, TweenInfo.new(1.6, Enum.EasingStyle.Linear), {Offset = Vector2.new(1, 0)})
+				grad.Offset = Vector2.new(-1.2, 0)
+				local tw = tweenSvc:Create(
+					grad,
+					TweenInfo.new(2.2, Enum.EasingStyle.Linear, Enum.EasingDirection.InOut),
+					{ Offset = Vector2.new(1.2, 0) }
+				)
 				tw:Play()
 				tw.Completed:Wait()
-				task.wait(0.35)
+				-- tiny pause then loop
+				task.wait(0.15)
 			end
 		end)
 	end
 
-	-- Rainbow: cycle hue on the gradient colors
+	-- Optional rainbow override (replaces static colors while running)
 	if opts.rainbow then
 		task.spawn(function()
 			local t0 = tick()
 			while label and label.Parent and grad and grad.Parent do
-				local t = (tick() - t0) * 0.35
-				local c1 = Color3.fromHSV((t) % 1, 0.9, 1)
-				local c2 = Color3.fromHSV((t + 0.35) % 1, 0.9, 1)
+				local t = (tick() - t0) * 0.4
+				local c1 = Color3.fromHSV((t) % 1, 0.85, 1)
+				local c2 = Color3.fromHSV((t + 0.4) % 1, 0.85, 1)
 				grad.Color = ColorSequence.new({
-					ColorSequenceKeypoint.new(0, c1),
-					ColorSequenceKeypoint.new(1, c2),
+					ColorSequenceKeypoint.new(0,    c1),
+					ColorSequenceKeypoint.new(0.45, c2),
+					ColorSequenceKeypoint.new(0.55, c1),
+					ColorSequenceKeypoint.new(1,    c2),
 				})
 				runSvc.Heartbeat:Wait()
 			end
 		end)
 	end
 
-	-- Pulse: soft transparency pulse on the label
 	if opts.pulse then
 		task.spawn(function()
 			while label and label.Parent do
-				tweenSvc:Create(label, TweenInfo.new(0.9, Enum.EasingStyle.Sine, Enum.EasingDirection.InOut), {TextTransparency = 0.25}):Play()
+				tweenSvc:Create(label, TweenInfo.new(0.9, Enum.EasingStyle.Sine, Enum.EasingDirection.InOut), {TextTransparency = 0.2}):Play()
 				task.wait(0.9)
 				tweenSvc:Create(label, TweenInfo.new(0.9, Enum.EasingStyle.Sine, Enum.EasingDirection.InOut), {TextTransparency = 0}):Play()
 				task.wait(0.9)
@@ -771,17 +783,18 @@ function buildTag(plr)
 	dname.ZIndex = 5
 
 	-- ===== GRADIENT ON RANK TEXT (this is what was missing) =====
+	-- Rank text: continuous color swipe
 	applyTextGradient(kzk, finalColors[1], finalColors[2] or finalColors[1], {
 		rotation = 0,
-		shimmer = CONFIG.ShimmerEnabled,
+		shimmer = true,  -- always swipe
 		rainbow = CONFIG.RainbowRankEnabled,
 		pulse = CONFIG.PulseEnabled,
 	})
 
-	-- Soft gradient on username too (dimmer)
+	-- Username: same swipe, slightly slower feel via same system
 	applyTextGradient(dname, finalColors[1], finalColors[2] or finalColors[1], {
 		rotation = 0,
-		shimmer = false,
+		shimmer = true,
 		rainbow = false,
 		pulse = false,
 	})
