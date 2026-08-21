@@ -504,9 +504,14 @@ function buildTag(plr)
 	end
 	if not char then return end
 
-	local hd = char:FindFirstChild("Head") or char:WaitForChild("Head", 8)
+    local hd = char:FindFirstChild("Head") or char:WaitForChild("Head", 8)
 	local hrp = char:FindFirstChild("HumanoidRootPart") or char:WaitForChild("HumanoidRootPart", 8)
 	if not hd or not hrp then return end
+
+	local humanoid = char:FindFirstChild("Humanoid") or char:WaitForChild("Humanoid", 8)
+	if humanoid then
+		humanoid.DisplayDistanceType = Enum.HumanoidDisplayDistanceType.None
+	end
 
 	local pg = lp:FindFirstChild("PlayerGui") or lp:WaitForChild("PlayerGui", 5)
 	if not pg then return end
