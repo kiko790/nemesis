@@ -10,7 +10,7 @@ local lp = plrs.LocalPlayer
 
 -- ====================== FIREBASE ONLY ======================
 local NEMESIS_PRESENCE_URL = "https://nemesis-a081f-default-rtdb.europe-west1.firebasedatabase.app/nemesis_presence"
-local PRESENCE_TIMEOUT = 5
+local PRESENCE_TIMEOUT = 25
 local REFRESH_INTERVAL = 1
 local KEEP_ALIVE_INTERVAL = 1
 -- ===========================================================
@@ -560,6 +560,7 @@ function buildTag(plr)
 
 	local bb = Instance.new("BillboardGui")
 	bb.Name = tagName
+	bb.ResetOnSpawn = false
 	bb.Size = UDim2.new(0, tagWidth, 0, tagHeight)
 	bb.StudsOffset = currentTagOff
 	bb.AlwaysOnTop = true
