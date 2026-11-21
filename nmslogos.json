@@ -1,0 +1,11 @@
+{
+  "nemesis_logo":  { "url": "https://i.ibb.co/N6Gd54mv/Futuristic-White-Nemesis-Wordmark.png", "file": "nmsjfhwud.png" },
+  "xmas_logo":     { "url": "https://i.ibb.co/kg5xrZBk/xmaslogonms.png", "file": "xmaslogonms.png" },
+  "xmas_bg":       { "url": "https://files.catbox.moe/kwozus.png", "file": "xmasbgimage.png" },
+  "default_bg":    { "url": "https://files.catbox.moe/s5rigo.png", "file": "nmsbg.png" },
+  "search_logo":   { "url": "https://i.ibb.co/JRnrXq4Y/search-1.png", "file": "kiko_search_logo.png" },
+  "tag_logo":      { "url": "https://i.ibb.co/V01STBXt/tag.png", "file": "tag12.png" },
+  "santa_toggle":  { "url": "https://files.catbox.moe/ur1e7m.png", "file": "santatoggle.png" },
+  "santa_corner":  { "url": "https://files.catbox.moe/w5adnu.png", "file": "santaharcorner.png" },
+  "discord_image": { "url": "https://i.ibb.co/0jNTTrF9/Discord-PFP-Logo.png", "file": "discordimage.png" }
+}
