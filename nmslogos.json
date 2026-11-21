@@ -2,7 +2,8 @@
   "startup_sound": {
     "url": "https://files.catbox.moe/qh6tzw.mp3",
     "file": "nmsxmasjingle.mp3",
-    "volume": 0.8 },
+    "volume": 0.8 
+  },
   "nemesis_logo":  { "url": "https://i.ibb.co/N6Gd54mv/Futuristic-White-Nemesis-Wordmark.png", "file": "nmsjfhwud.png" },
   "xmas_logo":     { "url": "https://i.ibb.co/kg5xrZBk/xmaslogonms.png", "file": "xmaslogonms1.png" },
   "xmas_bg":       { "url": "https://files.catbox.moe/kwozus.png", "file": "xmasbgimage23.png" },
